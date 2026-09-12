@@ -1,0 +1,153 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const paintings = await getCollection('paintings');
+  return paintings.map((entry) => ({
+    params: { id: entry.id },
+    props: { painting: entry.data },
+  }));
+}
+
+const { painting } = Astro.props;
+---
+
+<Layout title={`${painting.title} — Tahsin`}>
+  <div class="detail-container">
+    <a href="/" class="back-link">← Back to Gallery</a>
+
+    <div class="detail-grid">
+      <div class="artwork-display">
+        <img src={painting.image} alt={painting.title} />
+      </div>
+
+      <div class="artwork-info">
+        <h1>{painting.title}</h1>
+        
+        <dl class="specs">
+          <div>
+            <dt>Medium</dt>
+            <dd>{painting.medium}</dd>
+          </div>
+          <div>
+            <dt>Dimensions</dt>
+            <dd>{painting.dimensions}</dd>
+          </div>
+          <div>
+            <dt>Year</dt>
+            <dd>{painting.year}</dd>
+          </div>
+        </dl>
+
+        {painting.description && (
+          <div class="description">
+            <h2>Notes</h2>
+            <p>{painting.description}</p>
+          </div>
+        )}
+
+        <div class="inquiry-box">
+          <a href={`mailto:contact@yourdomain.com?subject=Inquiry: ${painting.title}`} class="inquiry-button">
+            Inquire About This Piece
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .back-link {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: #666666;
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+
+  .back-link:hover {
+    color: #111111;
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .detail-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  .artwork-display img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .artwork-info h1 {
+    font-size: 2.25rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+  }
+
+  .specs {
+    display: grid;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .specs dt {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888888;
+  }
+
+  .specs dd {
+    font-size: 1.05rem;
+    color: #222222;
+  }
+
+  .description {
+    margin-top: 1.5rem;
+  }
+
+  .description h2 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888888;
+    margin-bottom: 0.5rem;
+  }
+
+  .description p {
+    color: #444444;
+  }
+
+  .inquiry-box {
+    margin-top: 2.5rem;
+  }
+
+  .inquiry-button {
+    display: inline-block;
+    padding: 0.85rem 1.75rem;
+    background-color: #111111;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+  }
+
+  .inquiry-button:hover {
+    background-color: #333333;
+  }
+</style>

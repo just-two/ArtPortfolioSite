@@ -1,17 +1,48 @@
 ---
-const headerTitle = "Welcome!";
-const pageTitle = "Tahsin Loqman";
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import ArtCard from '../components/ArtCard.astro';
+
+const paintings = await getCollection('paintings');
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{headerTitle}</title>
-  </head>
-  <body>
-    <h1>{pageTitle}</h1>
-    <p>Portfolio under construction.</p>
-  </body>
-</html>
+<Layout title="Tahsin — Selected Works">
+  <section class="intro-section">
+    <h1>Selected Artwork</h1>
+    <p>Oil paintings, floral studies, and still life compositions.</p>
+  </section>
+
+  <section class="gallery-grid">
+    {paintings.map((piece) => (
+      <ArtCard
+        id={piece.id}
+        title={piece.data.title}
+        medium={piece.data.medium}
+        year={piece.data.year}
+        image={piece.data.image}
+      />
+    ))}
+  </section>
+</Layout>
+
+<style>
+  .intro-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .intro-section h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  .intro-section p {
+    color: #666666;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2.5rem 2rem;
+  }
+</style>

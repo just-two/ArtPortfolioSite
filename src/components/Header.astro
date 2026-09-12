@@ -1,0 +1,57 @@
+---
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="header-container">
+    <a href="/" class="brand-title">Tahsin</a>
+    <nav class="site-nav">
+      <a href="/" class:list={[{ active: currentPath === '/' }]}>Gallery</a>
+      <a href="/about" class:list={[{ active: currentPath.startsWith('/about') }]}>About</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    width: 100%;
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #ffffff;
+  }
+
+  .header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .brand-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #111111;
+    text-decoration: none;
+  }
+
+  .site-nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .site-nav a {
+    font-size: 0.95rem;
+    color: #666666;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .site-nav a:hover,
+  .site-nav a.active {
+    color: #111111;
+    font-weight: 500;
+  }
+</style>

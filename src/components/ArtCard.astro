@@ -1,0 +1,70 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  medium: string;
+  year: number;
+  image: string;
+}
+
+const { id, title, medium, year, image } = Astro.props;
+---
+
+<article class="art-card">
+  <a href={`/artwork/${id}`}>
+    <div class="image-wrapper">
+      <img src={image} alt={title} loading="lazy" />
+    </div>
+    <div class="card-meta">
+      <h2>{title}</h2>
+      <p>{medium} • {year}</p>
+    </div>
+  </a>
+</article>
+
+<style>
+  .art-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .art-card a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .image-wrapper {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background-color: #f2f2f2;
+    border-radius: 4px;
+  }
+
+  .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .art-card a:hover .image-wrapper img {
+    transform: scale(1.03);
+  }
+
+  .card-meta {
+    margin-top: 0.75rem;
+  }
+
+  .card-meta h2 {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #111111;
+  }
+
+  .card-meta p {
+    font-size: 0.875rem;
+    color: #666666;
+    margin-top: 0.15rem;
+  }
+</style>
