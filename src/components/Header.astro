@@ -1,13 +1,14 @@
 ---
 const currentPath = Astro.url.pathname;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <header class="site-header">
   <div class="header-container">
-    <a href="/" class="brand-title">Tahsin</a>
+    <a href={`${baseUrl}/`} class="brand-title">Tahsin</a>
     <nav class="site-nav">
-      <a href="/" class:list={[{ active: currentPath === '/' }]}>Gallery</a>
-      <a href="/about" class:list={[{ active: currentPath.startsWith('/about') }]}>About</a>
+      <a href={`${baseUrl}/`} class:list={[{ active: currentPath === `${baseUrl}/` || currentPath === `${baseUrl}` }]}>Gallery</a>
+      <a href={`${baseUrl}/about`} class:list={[{ active: currentPath.includes('/about') }]}>About</a>
     </nav>
   </div>
 </header>

@@ -8,12 +8,13 @@ interface Props {
 }
 
 const { id, title, medium, year, image } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, ''); // Normalizes trailing slash
 ---
 
 <article class="art-card">
-  <a href={`/artwork/${id}`}>
+  <a href={`${baseUrl}/artwork/${id}`}>
     <div class="image-wrapper">
-      <img src={image} alt={title} loading="lazy" />
+      <img src={`${baseUrl}${image}`} alt={title} loading="lazy" />
     </div>
     <div class="card-meta">
       <h2>{title}</h2>

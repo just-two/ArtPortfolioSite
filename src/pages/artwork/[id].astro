@@ -11,15 +11,16 @@ export async function getStaticPaths() {
 }
 
 const { painting } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <Layout title={`${painting.title} — Tahsin`}>
   <div class="detail-container">
-    <a href="/" class="back-link">← Back to Gallery</a>
+    <a href={`${baseUrl}/`} class="back-link">← Back to Gallery</a>
 
     <div class="detail-grid">
       <div class="artwork-display">
-        <img src={painting.image} alt={painting.title} />
+        <img src={`${baseUrl}${painting.image}`} alt={painting.title} />
       </div>
 
       <div class="artwork-info">
