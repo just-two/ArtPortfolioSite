@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MailingListForm from '../components/MailingListForm.astro';
+---
+
+<Layout 
+  title="Join the Mailing List — Tahsin" 
+  description="Subscribe to receive updates on new studio works, upcoming gallery releases, and available paintings."
+>
+  <div class="subscribe-container">
+    <h1>Stay Updated</h1>
+    <p class="subtitle">
+      Join the collector list for early updates on new studio works, print releases, and private viewings.
+    </p>
+
+    <div class="form-wrapper">
+      <MailingListForm />
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .subscribe-container {
+    max-width: 500px;
+    margin: 4rem auto;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: #666666;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .form-wrapper {
+    background-color: #ffffff;
+    padding: 2rem;
+    border: 1px solid #ebebeb;
+    border-radius: 6px;
+  }
+</style>

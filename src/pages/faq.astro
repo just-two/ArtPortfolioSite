@@ -1,0 +1,144 @@
+---
+import Layout from '../layouts/Layout.astro';
+import faqData from '../data/faq.json';
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+const faqs: FAQItem[] = faqData;
+---
+
+<Layout 
+  title="Frequently Asked Questions — Tahsin" 
+  description="Answers to common questions about purchasing original oil paintings, shipping, commissions, and care."
+>
+  <div class="faq-container">
+    <header class="faq-header">
+      <h1>Frequently Asked Questions</h1>
+      <p>Information regarding original artwork purchases, packaging, shipping, and commissions.</p>
+    </header>
+
+    <div class="accordion-group">
+      {faqs.map((faq) => (
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>{faq.question}</span>
+            <span class="chevron" aria-hidden="true">+</span>
+          </summary>
+          <div class="faq-answer">
+            <p>{faq.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+
+    <div class="faq-footer">
+      <p>Have a question not answered here?</p>
+      <a href="mailto:contact@yourdomain.com" class="contact-link">Get in touch directly →</a>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .faq-container {
+    max-width: 680px;
+    margin: 3rem auto;
+  }
+
+  .faq-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .faq-header h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+    letter-spacing: -0.02em;
+  }
+
+  .faq-header p {
+    color: #666666;
+    font-size: 1.05rem;
+  }
+
+  .accordion-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .faq-item {
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    background-color: #ffffff;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+  }
+
+  .faq-item[open] {
+    border-color: #cccccc;
+  }
+
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.1rem 1.25rem;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #111111;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  /* Hide default webkit browser arrow */
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .chevron {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: #888888;
+    transition: transform 0.2s ease;
+  }
+
+  .faq-item[open] .chevron {
+    transform: rotate(45deg); /* Turns + into x */
+  }
+
+  .faq-answer {
+    padding: 0 1.25rem 1.25rem 1.25rem;
+    color: #555555;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .faq-footer {
+    margin-top: 3.5rem;
+    padding: 2rem;
+    text-align: center;
+    background-color: #fafafa;
+    border-radius: 6px;
+  }
+
+  .faq-footer p {
+    color: #666666;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-link {
+    color: #111111;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .contact-link:hover {
+    text-decoration: underline;
+  }
+</style>

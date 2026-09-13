@@ -5,20 +5,38 @@ interface Props {
   medium: string;
   year: number;
   image: string;
+  forSale?: boolean;
+  price?: number;
+  displayMedium?: string; // Optional prop to override displayed text
 }
 
-const { id, title, medium, year, image } = Astro.props;
-const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, ''); // Normalizes trailing slash
+const { 
+  id, 
+  title, 
+  medium, 
+  year, 
+  image, 
+  forSale = false, 
+  price, 
+  displayMedium 
+} = Astro.props;
+
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+const mediumLabel = displayMedium || medium;
 ---
 
 <article class="art-card">
   <a href={`${baseUrl}/artwork/${id}`}>
     <div class="image-wrapper">
       <img src={`${baseUrl}${image}`} alt={title} loading="lazy" />
+      {forSale && <span class="availability-badge">Available</span>}
     </div>
     <div class="card-meta">
-      <h2>{title}</h2>
-      <p>{medium} • {year}</p>
+      <div class="title-row">
+        <h2>{title}</h2>
+        {forSale && price && <span class="card-price">${price}</span>}
+      </div>
+      <p>{mediumLabel} • {year}</p>
     </div>
   </a>
 </article>
@@ -35,6 +53,7 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, ''); // Normalizes trail
   }
 
   .image-wrapper {
+    position: relative;
     width: 100%;
     aspect-ratio: 4 / 3;
     overflow: hidden;
@@ -53,12 +72,39 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, ''); // Normalizes trail
     transform: scale(1.03);
   }
 
+  .availability-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    background-color: rgba(17, 17, 17, 0.85);
+    color: #ffffff;
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    backdrop-filter: blur(4px);
+  }
+
   .card-meta {
     margin-top: 0.75rem;
   }
 
+  .title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
   .card-meta h2 {
     font-size: 1.05rem;
+    font-weight: 500;
+    color: #111111;
+  }
+
+  .card-price {
+    font-size: 0.95rem;
     font-weight: 500;
     color: #111111;
   }

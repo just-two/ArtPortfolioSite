@@ -6,5 +6,8 @@
   "image": "/artwork/starry-night.jpg",
   "tags": ["oil", "still-life", "floral"],
   "featured": true,
-  "description": "Vincent van Gogh's famous painting"
+  "description": "Vincent van Gogh's famous painting",
+  "for_sale": true,
+  "sale_medium": "Original",
+  "price": 1500
 }

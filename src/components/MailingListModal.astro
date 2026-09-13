@@ -1,0 +1,136 @@
+---
+import MailingListForm from './MailingListForm.astro';
+
+const isDev = import.meta.env.DEV;
+---
+
+<div 
+  id="mailing-modal" 
+  class="modal-backdrop" 
+  aria-hidden="true" 
+  data-is-dev={isDev ? "true" : "false"}
+>
+  <div class="modal-content">
+    <button id="close-modal" class="close-button" aria-label="Close popup">&times;</button>
+    
+    <h2>Join the Collector List</h2>
+    <p>Be the first to know when new originals and prints are released from the studio.</p>
+
+    <MailingListForm />
+  </div>
+</div>
+
+<style>
+  /* Styles remain unchanged */
+  .modal-backdrop {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .modal-backdrop.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .modal-content {
+    position: relative;
+    width: 360px;
+    padding: 1.75rem;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  .close-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #888888;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .close-button:hover {
+    color: #111111;
+  }
+
+  .modal-content h2 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+  }
+
+  .modal-content p {
+    font-size: 0.875rem;
+    color: #666666;
+    margin-bottom: 1.25rem;
+  }
+</style>
+
+<script>
+  function initMailingModal() {
+    const STORAGE_KEY = 'has_seen_mailing_list_popup';
+    const modal = document.getElementById('mailing-modal');
+    const closeBtn = document.getElementById('close-modal');
+
+    if (!modal) return;
+
+    // Check if running in dev mode
+    const isDev = modal.dataset.isDev === 'true';
+
+    // Skip localStorage check if in development mode
+    if (!isDev && localStorage.getItem(STORAGE_KEY) === 'true') {
+      return;
+    }
+
+    function showModal() {
+      if (modal && !modal.classList.contains('visible')) {
+        modal.classList.add('visible');
+        modal.setAttribute('aria-hidden', 'false');
+
+        // Only save to localStorage in production so dev mode keeps resetting
+        if (!isDev) {
+          localStorage.setItem(STORAGE_KEY, 'true');
+        }
+
+        window.removeEventListener('scroll', checkTrigger);
+        window.removeEventListener('resize', checkTrigger);
+      }
+    }
+
+    function checkTrigger() {
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollPosition = windowHeight + window.scrollY;
+
+      const isShortPage = documentHeight <= windowHeight;
+      const isNearBottom = scrollPosition >= documentHeight - 150;
+
+      if (isShortPage || isNearBottom) {
+        showModal();
+      }
+    }
+
+    closeBtn?.addEventListener('click', () => {
+      modal.classList.remove('visible');
+      modal.setAttribute('aria-hidden', 'true');
+    });
+
+    checkTrigger();
+    window.addEventListener('scroll', checkTrigger);
+    window.addEventListener('resize', checkTrigger);
+  }
+
+  initMailingModal();
+</script>

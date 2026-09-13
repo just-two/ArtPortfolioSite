@@ -12,6 +12,11 @@ const paintingsCollection = defineCollection({
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
     description: z.string().optional(),
+    
+    // Commerce / Availability
+    for_sale: z.boolean().default(false),
+    sale_medium: z.enum(['Original', 'Print', 'Original & Print']).optional(),
+    price: z.number().optional(), // In USD
   }),
 });
 

@@ -12,6 +12,14 @@ export async function getStaticPaths() {
 
 const { painting } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const inquirySubject = painting.for_sale
+  ? `Purchase Inquiry: ${painting.title}`
+  : `Inquiry: ${painting.title}`;
+
+const inquiryBody = painting.for_sale
+  ? `Hi Tahsin,\n\nI am interested in purchasing "${painting.title}" (${painting.sale_medium || 'Original'}, $${painting.price}). Could you please share details on availability and shipping?\n\nThanks!`
+  : `Hi Tahsin,\n\nI would like to inquire about "${painting.title}".\n\nThanks!`;
 ---
 
 <Layout title={`${painting.title} — Tahsin`}>
@@ -48,10 +56,35 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
           </div>
         )}
 
-        <div class="inquiry-box">
-          <a href={`mailto:contact@yourdomain.com?subject=Inquiry: ${painting.title}`} class="inquiry-button">
-            Inquire About This Piece
-          </a>
+        <div class="purchase-box">
+          {painting.for_sale ? (
+            <div class="sale-status available">
+              <div class="status-header">
+                <span class="status-dot"></span>
+                <span class="status-text">Available for Purchase</span>
+              </div>
+              <div class="price-row">
+                <span class="price">${painting.price}</span>
+                {painting.sale_medium && <span class="sale-medium">({painting.sale_medium})</span>}
+              </div>
+              <a 
+                href={`mailto:contact@yourdomain.com?subject=${encodeURIComponent(inquirySubject)}&body=${encodeURIComponent(inquiryBody)}`} 
+                class="inquiry-button primary"
+              >
+                Inquire to Purchase
+              </a>
+            </div>
+          ) : (
+            <div class="sale-status private-collection">
+              <span class="status-text">Private Collection / Sold</span>
+              <a 
+                href={`mailto:contact@yourdomain.com?subject=${encodeURIComponent(inquirySubject)}`} 
+                class="inquiry-button secondary"
+              >
+                Inquire About Prints or Similar Works
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -133,22 +166,80 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
     color: #444444;
   }
 
-  .inquiry-box {
+  .purchase-box {
     margin-top: 2.5rem;
+    padding: 1.5rem;
+    border: 1px solid #ebebeb;
+    border-radius: 6px;
+    background-color: #ffffff;
+  }
+
+  .status-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #2e7d32;
+    border-radius: 50%;
+  }
+
+  .status-text {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #555555;
+    font-weight: 500;
+  }
+
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .price {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #111111;
+  }
+
+  .sale-medium {
+    font-size: 0.95rem;
+    color: #666666;
   }
 
   .inquiry-button {
-    display: inline-block;
-    padding: 0.85rem 1.75rem;
-    background-color: #111111;
-    color: #ffffff;
-    text-decoration: none;
+    display: block;
+    text-align: center;
+    padding: 0.85rem 1.5rem;
     border-radius: 4px;
     font-size: 0.95rem;
-    transition: background-color 0.2s ease;
+    text-decoration: none;
+    transition: all 0.2s ease;
   }
 
-  .inquiry-button:hover {
+  .inquiry-button.primary {
+    background-color: #111111;
+    color: #ffffff;
+  }
+
+  .inquiry-button.primary:hover {
     background-color: #333333;
+  }
+
+  .inquiry-button.secondary {
+    background-color: #f5f5f5;
+    color: #333333;
+    border: 1px solid #e0e0e0;
+  }
+
+  .inquiry-button.secondary:hover {
+    background-color: #eeeeee;
   }
 </style>

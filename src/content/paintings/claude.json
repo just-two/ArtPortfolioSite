@@ -6,5 +6,8 @@
   "image": "/artwork/claude.jpg",
   "tags": ["oil", "still-life", "hay"],
   "featured": true,
-  "description": "Claude Monet's famous painting"
+  "description": "Claude Monet's famous painting",
+  "for_sale": true,
+  "sale_medium": "Print",
+  "price": 10
 }

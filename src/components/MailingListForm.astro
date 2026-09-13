@@ -1,0 +1,79 @@
+---
+interface Props {
+  endpoint?: string;
+}
+
+const { endpoint = "https://formspree.io/f/your-form-id" } = Astro.props;
+---
+
+<form action={endpoint} method="POST" class="mailing-list-form">
+  <div class="form-group">
+    <input 
+      type="email" 
+      name="email" 
+      placeholder="Enter your email" 
+      required 
+      aria-label="Email address for mailing list"
+    />
+    <button type="submit">Subscribe</button>
+  </div>
+</form>
+
+<style>
+  .mailing-list-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+    box-sizing: border-box;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.6rem;
+  }
+
+  input[type="email"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  input[type="email"]:focus {
+    outline: none;
+    border-color: #111111;
+  }
+
+  button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #111111;
+    color: #ffffff;
+    border: 1px solid #111111;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #333333;
+    border-color: #333333;
+  }
+
+  .form-disclaimer {
+    font-size: 0.75rem;
+    color: #888888;
+    margin: 0;
+    text-align: center;
+  }
+</style>
