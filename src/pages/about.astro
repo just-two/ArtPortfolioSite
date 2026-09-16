@@ -1,7 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { SITE_CONFIG } from '../config';
 
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 ---
 
 <Layout title="About — Tahsin" description="Bio, artist statement, and contact information for Tahsin.">
@@ -36,7 +38,7 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
           <div class="detail-block">
             <h3>Inquiries & Commissions</h3>
             <p>For purchasing available works, exhibition inquiries, or private commissions, please reach out via email.</p>
-            <a href="mailto:contact@yourdomain.com" class="contact-button">Send an Inquiry</a>
+            <a href={`mailto:${inquiryEmail}`} class="contact-button">Send an Inquiry</a>
           </div>
         </section>
       </div>

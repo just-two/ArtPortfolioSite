@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import { SITE_CONFIG } from '../../config'; // Import global config
 
 export async function getStaticPaths() {
   const paintings = await getCollection('paintings');
@@ -12,6 +13,7 @@ export async function getStaticPaths() {
 
 const { painting } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 
 const inquirySubject = painting.for_sale
   ? `Purchase Inquiry: ${painting.title}`
@@ -22,7 +24,11 @@ const inquiryBody = painting.for_sale
   : `Hi Tahsin,\n\nI would like to inquire about "${painting.title}".\n\nThanks!`;
 ---
 
-<Layout title={`${painting.title} — Tahsin`}>
+<Layout 
+  title={`${painting.title} — Tahsin`}
+  description={`${painting.title} (${painting.year}). ${painting.medium}, ${painting.dimensions}.`}
+  image={painting.image}
+>
   <div class="detail-container">
     <a href={`${baseUrl}/`} class="back-link">← Back to Gallery</a>
 
@@ -47,6 +53,12 @@ const inquiryBody = painting.for_sale
             <dt>Year</dt>
             <dd>{painting.year}</dd>
           </div>
+          {painting.for_sale && painting.price && (
+            <div>
+              <dt>Price</dt>
+              <dd>${painting.price}</dd>
+            </div>
+          )}
         </dl>
 
         {painting.description && (
@@ -56,35 +68,13 @@ const inquiryBody = painting.for_sale
           </div>
         )}
 
-        <div class="purchase-box">
-          {painting.for_sale ? (
-            <div class="sale-status available">
-              <div class="status-header">
-                <span class="status-dot"></span>
-                <span class="status-text">Available for Purchase</span>
-              </div>
-              <div class="price-row">
-                <span class="price">${painting.price}</span>
-                {painting.sale_medium && <span class="sale-medium">({painting.sale_medium})</span>}
-              </div>
-              <a 
-                href={`mailto:contact@yourdomain.com?subject=${encodeURIComponent(inquirySubject)}&body=${encodeURIComponent(inquiryBody)}`} 
-                class="inquiry-button primary"
-              >
-                Inquire to Purchase
-              </a>
-            </div>
-          ) : (
-            <div class="sale-status private-collection">
-              <span class="status-text">Private Collection / Sold</span>
-              <a 
-                href={`mailto:contact@yourdomain.com?subject=${encodeURIComponent(inquirySubject)}`} 
-                class="inquiry-button secondary"
-              >
-                Inquire About Prints or Similar Works
-              </a>
-            </div>
-          )}
+        <div class="inquiry-box">
+          <a 
+            href={`mailto:${inquiryEmail}?subject=${encodeURIComponent(inquirySubject)}&body=${encodeURIComponent(inquiryBody)}`} 
+            class="inquiry-button primary"
+          >
+            Inquire to Purchase
+          </a>
         </div>
       </div>
     </div>
@@ -92,6 +82,12 @@ const inquiryBody = painting.for_sale
 </Layout>
 
 <style>
+  .detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
   .back-link {
     display: inline-block;
     margin-bottom: 2rem;
@@ -166,80 +162,22 @@ const inquiryBody = painting.for_sale
     color: #444444;
   }
 
-  .purchase-box {
+  .inquiry-box {
     margin-top: 2.5rem;
-    padding: 1.5rem;
-    border: 1px solid #ebebeb;
-    border-radius: 6px;
-    background-color: #ffffff;
-  }
-
-  .status-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    background-color: #2e7d32;
-    border-radius: 50%;
-  }
-
-  .status-text {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #555555;
-    font-weight: 500;
-  }
-
-  .price-row {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .price {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: #111111;
-  }
-
-  .sale-medium {
-    font-size: 0.95rem;
-    color: #666666;
   }
 
   .inquiry-button {
-    display: block;
-    text-align: center;
-    padding: 0.85rem 1.5rem;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-
-  .inquiry-button.primary {
+    display: inline-block;
+    padding: 0.85rem 1.75rem;
     background-color: #111111;
     color: #ffffff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
   }
 
-  .inquiry-button.primary:hover {
+  .inquiry-button:hover {
     background-color: #333333;
-  }
-
-  .inquiry-button.secondary {
-    background-color: #f5f5f5;
-    color: #333333;
-    border: 1px solid #e0e0e0;
-  }
-
-  .inquiry-button.secondary:hover {
-    background-color: #eeeeee;
   }
 </style>

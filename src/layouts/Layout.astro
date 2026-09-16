@@ -1,15 +1,24 @@
 ---
 import Header from '../components/Header.astro';
+import { SITE_CONFIG } from '../content.config';
 
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
 }
 
 const { 
   title = "Tahsin — Portfolio", 
-  description = "Art portfolio showcasing oil paintings, still lifes, and studio works." 
+  description = "Art portfolio showcasing oil paintings, still lifes, and studio works.",
+  image = "/artwork/twilight-sky.jpg"
 } = Astro.props;
+
+// Dynamically resolves site URL for Open Graph tags using Astro config
+const siteUrl = import.meta.env.SITE || "http://localhost:4321";
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const socialImageUrl = new URL(image, siteUrl).href;
+const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 ---
 
 <!DOCTYPE html>
@@ -18,8 +27,25 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="description" content={description} />
+    
+    <!-- Primary Meta Tags -->
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph / WhatsApp / iMessage / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImageUrl} />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
   </head>
   <body>
     <Header />
@@ -30,7 +56,7 @@ const {
       <div class="footer-container">
         <p>© {new Date().getFullYear()} Tahsin. All rights reserved.</p>
         <div class="footer-links">
-          <a href="mailto:contact@yourdomain.com">Inquiries</a>
+          <a href={`mailto:${inquiryEmail}`}>Inquiries</a>
         </div>
       </div>
     </footer>

@@ -1,6 +1,12 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
+export const SITE_CONFIG = {
+  title: 'Tahsin — Portfolio',
+  description: 'Art portfolio showcasing oil paintings, still lifes, and studio works.',
+  inquiryEmail: 'tahsinloqman@gmail.com',
+};
+
 const paintingsCollection = defineCollection({
   loader: glob({ pattern: '**/*.json', base: './src/content/paintings' }),
   schema: z.object({
