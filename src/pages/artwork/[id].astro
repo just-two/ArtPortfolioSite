@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { SITE_CONFIG } from '../../config';
+import { SITE_CONFIG } from '../../content.config';
 
 export async function getStaticPaths() {
   const paintings = await getCollection('paintings');
