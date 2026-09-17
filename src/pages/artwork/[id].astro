@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { SITE_CONFIG } from '../../content.config'; // Import global config
+import { SITE_CONFIG } from '../../config';
 
 export async function getStaticPaths() {
   const paintings = await getCollection('paintings');
@@ -13,15 +13,7 @@ export async function getStaticPaths() {
 
 const { painting } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
-const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
-
-const inquirySubject = painting.for_sale
-  ? `Purchase Inquiry: ${painting.title}`
-  : `Inquiry: ${painting.title}`;
-
-const inquiryBody = painting.for_sale
-  ? `Hi Tahsin,\n\nI am interested in purchasing "${painting.title}" (${painting.sale_medium || 'Original'}, $${painting.price}). Could you please share details on availability and shipping?\n\nThanks!`
-  : `Hi Tahsin,\n\nI would like to inquire about "${painting.title}".\n\nThanks!`;
+const inquiryEmail = SITE_CONFIG?.inquiryEmail || 'tahsinloqman@gmail.com';
 ---
 
 <Layout 
@@ -53,12 +45,6 @@ const inquiryBody = painting.for_sale
             <dt>Year</dt>
             <dd>{painting.year}</dd>
           </div>
-          {painting.for_sale && painting.price && (
-            <div>
-              <dt>Price</dt>
-              <dd>${painting.price}</dd>
-            </div>
-          )}
         </dl>
 
         {painting.description && (
@@ -68,13 +54,40 @@ const inquiryBody = painting.for_sale
           </div>
         )}
 
-        <div class="inquiry-box">
-          <a 
-            href={`mailto:${inquiryEmail}?subject=${encodeURIComponent(inquirySubject)}&body=${encodeURIComponent(inquiryBody)}`} 
-            class="inquiry-button primary"
-          >
-            Inquire to Purchase
-          </a>
+        <div class="purchase-box">
+          {painting.for_sale && painting.sale_options && painting.sale_options.length > 0 ? (
+            <div class="sale-options-list">
+              <h2>Available Purchase Options</h2>
+              {painting.sale_options.map((option) => {
+                const subject = `Inquiry: ${painting.title} (${option.medium})`;
+                const body = `Hi Tahsin,\n\nI am interested in purchasing "${painting.title}" - ${option.medium} ($${option.price}). Could you please provide information on availability and shipping?\n\nThanks!`;
+                return (
+                  <div class="option-row">
+                    <div class="option-details">
+                      <span class="option-medium">{option.medium}</span>
+                      <span class="option-price">${option.price}</span>
+                    </div>
+                    <a 
+                      href={`mailto:${inquiryEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`} 
+                      class="inquiry-button"
+                    >
+                      Inquire
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div class="sale-status private-collection">
+              <span class="status-text">Private Collection / Sold</span>
+              <a 
+                href={`mailto:${inquiryEmail}?subject=${encodeURIComponent(`Inquiry: ${painting.title}`)}`} 
+                class="inquiry-button secondary"
+              >
+                Inquire About Future Prints or Commissions
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -162,22 +175,71 @@ const inquiryBody = painting.for_sale
     color: #444444;
   }
 
-  .inquiry-box {
+  .purchase-box {
     margin-top: 2.5rem;
+    padding: 1.5rem;
+    border: 1px solid #ebebeb;
+    border-radius: 6px;
+    background-color: #ffffff;
+  }
+
+  .sale-options-list h2 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888888;
+    margin-bottom: 1rem;
+  }
+
+  .option-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .option-row:last-child {
+    border-bottom: none;
+  }
+
+  .option-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .option-medium {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111111;
+  }
+
+  .option-price {
+    font-size: 0.9rem;
+    color: #666666;
   }
 
   .inquiry-button {
     display: inline-block;
-    padding: 0.85rem 1.75rem;
+    padding: 0.5rem 1.25rem;
     background-color: #111111;
     color: #ffffff;
     text-decoration: none;
     border-radius: 4px;
-    font-size: 0.95rem;
+    font-size: 0.875rem;
     transition: background-color 0.2s ease;
   }
 
   .inquiry-button:hover {
     background-color: #333333;
+  }
+
+  .inquiry-button.secondary {
+    display: block;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    background-color: #f5f5f5;
+    color: #333333;
+    border: 1px solid #e0e0e0;
   }
 </style>

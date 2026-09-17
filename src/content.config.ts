@@ -19,10 +19,14 @@ const paintingsCollection = defineCollection({
     featured: z.boolean().default(false),
     description: z.string().optional(),
     
-    // Commerce / Availability
+    // Commerce
     for_sale: z.boolean().default(false),
-    sale_medium: z.enum(['Original', 'Print', 'Original & Print']).optional(),
-    price: z.number().optional(), // In USD
+    sale_options: z.array(
+      z.object({
+        medium: z.string(), // e.g. "Original", "Limited Edition Print"
+        price: z.number(),
+      })
+    ).optional(),
   }),
 });
 

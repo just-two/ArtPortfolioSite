@@ -1,0 +1,21 @@
+{
+  "title": "Bowl of Blueberries",
+  "medium": "Oil on wood",
+  "dimensions": "6 x 6 in",
+  "year": 2026,
+  "image": "/artwork/Bowl_of_Blueberries_resized.jpg",
+  "tags": ["oil", "still-life", "fruit"],
+  "featured": true,
+  "description": "A simple bowl of blueberries, in a blueberry ceramic bowl",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Original",
+      "price": 600
+    },
+    {
+      "medium": "Print",
+      "price": 20
+    }
+  ]
+}

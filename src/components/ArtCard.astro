@@ -1,4 +1,9 @@
 ---
+interface SaleOption {
+  medium: string;
+  price: number;
+}
+
 interface Props {
   id: string;
   title: string;
@@ -6,23 +11,16 @@ interface Props {
   year: number;
   image: string;
   forSale?: boolean;
-  price?: number;
-  displayMedium?: string; // Optional prop to override displayed text
+  saleOptions?: SaleOption[];
 }
 
-const { 
-  id, 
-  title, 
-  medium, 
-  year, 
-  image, 
-  forSale = false, 
-  price, 
-  displayMedium 
-} = Astro.props;
-
+const { id, title, medium, year, image, forSale = false, saleOptions = [] } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
-const mediumLabel = displayMedium || medium;
+
+// Compute starting price if multiple options exist
+const minPrice = saleOptions.length > 0 
+  ? Math.min(...saleOptions.map(o => o.price)) 
+  : null;
 ---
 
 <article class="art-card">
@@ -34,9 +32,13 @@ const mediumLabel = displayMedium || medium;
     <div class="card-meta">
       <div class="title-row">
         <h2>{title}</h2>
-        {forSale && price && <span class="card-price">${price}</span>}
+        {forSale && minPrice !== null && (
+          <span class="card-price">
+            {saleOptions.length > 1 ? `From $${minPrice}` : `$${minPrice}`}
+          </span>
+        )}
       </div>
-      <p>{mediumLabel} • {year}</p>
+      <p>{medium} • {year}</p>
     </div>
   </a>
 </article>
