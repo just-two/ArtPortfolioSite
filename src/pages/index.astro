@@ -2,52 +2,57 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import ArtCard from '../components/ArtCard.astro';
-import MailingListModal from '../components/MailingListModal.astro';
 
 const paintings = await getCollection('paintings');
 ---
 
-<Layout title="Tahsin — Selected Works">
-  <section class="intro-section">
-    <h1>Selected Artwork</h1>
-    <p>Oil paintings, floral studies, and still life compositions.</p>
-  </section>
-
-  <section class="gallery-grid">
-    {paintings.map((piece) => (
-      <ArtCard
-        id={piece.id}
-        title={piece.data.title}
-        medium={piece.data.medium}
-        year={piece.data.year}
-        image={piece.data.image}
-      />
-    ))}
-  </section>
-
-  <!-- Popup component renders silently until scroll triggers -->
-  <MailingListModal />
+<Layout title="Gallery — Tahsin">
+  <main class="gallery-container">
+    <div class="gallery-masonry">
+      {paintings.map((piece) => (
+        <div class="masonry-item">
+          <ArtCard
+            id={piece.id}
+            title={piece.data.title}
+            image={piece.data.image}
+            forSale={false}
+            showDetails={false}
+            uniform={false}
+          />
+        </div>
+      ))}
+    </div>
+  </main>
 </Layout>
 
 <style>
-  .intro-section {
-    margin-bottom: 2.5rem;
+  .gallery-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
   }
 
-  .intro-section h1 {
-    font-size: 2rem;
-    font-weight: 500;
-    margin-bottom: 0.25rem;
+  .gallery-masonry {
+    column-count: 3;
+    column-gap: 0.75rem; /* Tighter horizontal margin between columns */
+    width: 100%;
   }
 
-  .intro-section p {
-    color: #666666;
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 0.75rem; /* Tighter vertical margin between items */
   }
 
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2.5rem 2rem;
-    align-items: end; /* Keeps image bases aligned horizontally */
+  @media (max-width: 900px) {
+    .gallery-masonry {
+      column-count: 2;
+      column-gap: 0.75rem;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .gallery-masonry {
+      column-count: 1;
+    }
   }
 </style>

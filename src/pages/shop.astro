@@ -2,43 +2,61 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import ArtCard from '../components/ArtCard.astro';
+import MailingListModal from '../components/MailingListModal.astro';
 
 const allPaintings = await getCollection('paintings');
 const availableWorks = allPaintings.filter((piece) => piece.data.for_sale);
 ---
 
-<Layout title="Available Works — Tahsin" >
-  <section class="shop-header">
-    <h1>Available Works</h1>
-    <p>Original paintings, available for sale</p>
-  </section>
-
-  {availableWorks.length > 0 ? (
-    <section class="gallery-grid">
-      {availableWorks.map((piece) => (
-        <ArtCard
-          id={piece.id}
-          title={piece.data.title}
-          medium={piece.data.medium}
-          displayMedium={piece.data.sale_medium}
-          year={piece.data.year}
-          image={piece.data.image}
-          forSale={piece.data.for_sale}
-          price={piece.data.price}
-        />
-      ))}
+<Layout 
+  title="Available Works — Tahsin" 
+  description="Original oil paintings and prints available for purchase directly from the studio."
+>
+  <main class="shop-container">
+    <section class="shop-header">
+      <h1>Available Works</h1>
+      <p>Original oil paintings and limited releases available directly from the studio.</p>
     </section>
-  ) : (
-    <div class="empty-state">
-      <p>There are currently no original pieces available for immediate purchase.</p>
-      <a href="mailto:contact@yourdomain.com" class="commission-link">
-        Inquire about upcoming works or commissions →
-      </a>
-    </div>
-  )}
+
+    {availableWorks.length > 0 ? (
+      <div class="shop-grid">
+        {availableWorks.map((piece) => (
+          <ArtCard
+            id={piece.id}
+            title={piece.data.title}
+            medium={piece.data.medium}
+            displayMedium={piece.data.sale_options?.[0]?.medium}
+            year={piece.data.year}
+            image={piece.data.image}
+            forSale={piece.data.for_sale}
+            saleOptions={piece.data.sale_options}
+            showDetails={true}
+            uniform={true}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="empty-state">
+        <p>There are currently no original pieces or prints available for immediate purchase.</p>
+        <a href="mailto:contact@yourdomain.com" class="commission-link">
+          Inquire about upcoming works or commissions →
+        </a>
+      </div>
+    )}
+  </main>
+
+  <MailingListModal />
 </Layout>
 
 <style>
+  .shop-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+  }
+
   .shop-header {
     margin-bottom: 2.5rem;
     padding-bottom: 1.5rem;
@@ -57,10 +75,12 @@ const availableWorks = allPaintings.filter((piece) => piece.data.for_sale);
     font-size: 1.05rem;
   }
 
-  .gallery-grid {
+  /* Responsive multi-column uniform grid */
+  .shop-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2.5rem 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 2.5rem 1.5rem;
+    width: 100%;
   }
 
   .empty-state {

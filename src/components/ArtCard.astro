@@ -1,4 +1,7 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
+
 interface SaleOption {
   medium: string;
   price: number;
@@ -7,71 +10,180 @@ interface SaleOption {
 interface Props {
   id: string;
   title: string;
-  medium: string;
-  year: number;
+  medium?: string;
+  year?: number;
   image: string;
   forSale?: boolean;
   saleOptions?: SaleOption[];
+  displayMedium?: string;
+  showDetails?: boolean;
+  uniform?: boolean;
 }
 
-const { id, title, medium, year, image, forSale = false, saleOptions = [] } = Astro.props;
-const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+const { 
+  id, 
+  title, 
+  medium = '', 
+  year, 
+  image, 
+  forSale = false, 
+  saleOptions = [], 
+  displayMedium,
+  showDetails = false,
+  uniform = false
+} = Astro.props;
 
-// Compute starting price if multiple options exist
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+const mediumLabel = displayMedium || medium;
+
 const minPrice = saleOptions.length > 0 
   ? Math.min(...saleOptions.map(o => o.price)) 
   : null;
+
+// Helper to determine image bucket dynamically at build time
+function getDynamicRatioClass(imgPath: string): string {
+  try {
+    // Resolve absolute path to the local public directory image
+    const localPath = path.join(process.cwd(), 'public', imgPath);
+    if (!fs.existsSync(localPath)) return 'ratio-natural';
+
+    const buffer = fs.readFileSync(localPath);
+    
+    let width = 0;
+    let height = 0;
+
+    // Fast header inspection for PNG, JPEG, and WebP
+    if (buffer[0] === 0xff && buffer[1] === 0xd8) { // JPEG
+      let offset = 2;
+      while (offset < buffer.length) {
+        const marker = buffer.readUInt16BE(offset);
+        if (marker >= 0xffc0 && marker <= 0xffc3) {
+          height = buffer.readUInt16BE(offset + 5);
+          width = buffer.readUInt16BE(offset + 7);
+          break;
+        }
+        offset += 2 + buffer.readUInt16BE(offset + 2);
+      }
+    } else if (buffer.toString('ascii', 1, 4) === 'PNG') { // PNG
+      width = buffer.readUInt32BE(16);
+      height = buffer.readUInt32BE(20);
+    } else if (buffer.toString('ascii', 8, 12) === 'WEBP') { // WebP
+      if (buffer.toString('ascii', 12, 16) === 'VP8 ') {
+        width = buffer.readUInt16LE(26) & 0x3fff;
+        height = buffer.readUInt16LE(28) & 0x3fff;
+      } else if (buffer.toString('ascii', 12, 16) === 'VP8X') {
+        width = 1 + buffer.readUInt256LE(24);
+        height = 1 + buffer.readUInt256LE(27);
+      }
+    }
+
+    if (!width || !height) return 'ratio-natural';
+
+    const ratio = width / height;
+
+    // Match to closest bucket
+    if (ratio >= 1.35) return 'ratio-landscape'; // ~3:2 (1.5)
+    if (ratio >= 0.9 && ratio < 1.35) return 'ratio-square'; // ~1:1
+    if (ratio >= 0.75 && ratio < 0.9) return 'ratio-portrait'; // ~4:5 (0.8)
+    return 'ratio-tall'; // ~2:3 (0.66) or taller
+  } catch (err) {
+    return 'ratio-natural';
+  }
+}
+
+const ratioClass = uniform ? 'ratio-shop' : getDynamicRatioClass(image);
 ---
 
-<article class="art-card">
-  <a href={`${baseUrl}/artwork/${id}`}>
-    <div class="image-wrapper">
+<div class={`art-card ${uniform ? 'is-uniform' : ''}`}>
+  <a href={`${baseUrl}/artwork/${id}`} aria-label={title}>
+    <div class={`image-wrapper ${ratioClass}`}>
       <img src={`${baseUrl}${image}`} alt={title} loading="lazy" />
       {forSale && <span class="availability-badge">Available</span>}
     </div>
-    <div class="card-meta">
-      <div class="title-row">
-        <h2>{title}</h2>
-        {forSale && minPrice !== null && (
-          <span class="card-price">
-            {saleOptions.length > 1 ? `From $${minPrice}` : `$${minPrice}`}
-          </span>
-        )}
+
+    {showDetails && (
+      <div class="card-meta">
+        <div class="title-row">
+          <h2>{title}</h2>
+          {forSale && minPrice !== null && (
+            <span class="card-price">
+              {saleOptions.length > 1 ? `From $${minPrice}` : `$${minPrice}`}
+            </span>
+          )}
+        </div>
+        <p>{mediumLabel}{year ? ` • ${year}` : ''}</p>
       </div>
-      <p>{medium} • {year}</p>
-    </div>
+    )}
   </a>
-</article>
+</div>
 
 <style>
   .art-card {
-    display: flex;
-    flex-direction: column;
+    break-inside: avoid;
+    margin-bottom: 0.75rem;
   }
 
   .art-card a {
+    display: block;
     text-decoration: none;
     color: inherit;
+  }
+
+  .art-card a:visited,
+  .art-card a:hover,
+  .art-card a:active {
+    color: inherit;
+    text-decoration: none;
   }
 
   .image-wrapper {
     position: relative;
     width: 100%;
-    aspect-ratio: 4 / 3;
     overflow: hidden;
-    background-color: #f2f2f2;
     border-radius: 4px;
+    background-color: #f8f8f8;
   }
 
-  .image-wrapper img {
+  .image-wrapper.ratio-natural img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Aspect Ratio Buckets */
+  .image-wrapper.ratio-landscape {
+    aspect-ratio: 3 / 2;
+  }
+
+  .image-wrapper.ratio-square {
+    aspect-ratio: 1 / 1;
+  }
+
+  .image-wrapper.ratio-portrait {
+    aspect-ratio: 4 / 5;
+  }
+
+  .image-wrapper.ratio-tall {
+    aspect-ratio: 2 / 3;
+  }
+
+  .image-wrapper.ratio-shop {
+    aspect-ratio: 4 / 3;
+  }
+
+  .image-wrapper:not(.ratio-natural) img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    display: block;
+  }
+
+  .image-wrapper img {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
   }
 
   .art-card a:hover .image-wrapper img {
-    transform: scale(1.03);
+    transform: scale(1.02);
   }
 
   .availability-badge {
@@ -100,20 +212,24 @@ const minPrice = saleOptions.length > 0
   }
 
   .card-meta h2 {
-    font-size: 1.05rem;
-    font-weight: 500;
-    color: #111111;
-  }
-
-  .card-price {
     font-size: 0.95rem;
     font-weight: 500;
     color: #111111;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .card-price {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111111;
+    white-space: nowrap;
   }
 
   .card-meta p {
-    font-size: 0.875rem;
-    color: #666666;
-    margin-top: 0.15rem;
+    font-size: 0.8rem;
+    color: #777777;
+    margin-top: 0.2rem;
+    margin-bottom: 0;
   }
 </style>
