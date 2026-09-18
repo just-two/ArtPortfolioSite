@@ -3,10 +3,10 @@
   "medium": "Oil on wood",
   "dimensions": "6 x 6 in",
   "year": 2026,
-  "image": "/artwork/salt_and_sesame_bagels_stacked_resized.jpg",
-  "tags": ["oil", "still-life", "bagel"],
+  "image": "/artwork/salt_and_sesame_bagels_stacked.jpg",
+  "tags": ["oil", "still-life", "bagel", "food"],
   "featured": true,
-  "description": "A pair of bagels, one salt one sesame, stacked atop each one another",
+  "description": "A pair of bagels, one salt and one sesame, one stacked on top of the other",
   "for_sale": true,
   "sale_options": [
     {

@@ -1,0 +1,21 @@
+{
+  "title": "Red Tomato",
+  "medium": "Oil on canvas panel",
+  "dimensions": "4 x 4 in",
+  "year": 2026,
+  "image": "/artwork/red_tomato.jpg",
+  "tags": ["oil", "still-life", "fruit", "food"],
+  "featured": true,
+  "description": "A sun-drenched study in impasto, treating a single heirloom tomato as a rugged landscape of warm crimson and cool green shadow.",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Original",
+      "price": 400
+    },
+    {
+      "medium": "Print",
+      "price": 20
+    }
+  ]
+}

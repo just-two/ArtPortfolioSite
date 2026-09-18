@@ -1,0 +1,21 @@
+{
+  "title": "Garlic Clove",
+  "medium": "Oil on canvas panel",
+  "dimensions": "4 x 4 in",
+  "year": 2024,
+  "image": "/artwork/garlic_clove.jpg",
+  "tags": ["oil", "still-life", "vegetable", "food"],
+  "featured": true,
+  "description": "A garlic clove",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Original",
+      "price": 400
+    },
+    {
+      "medium": "Print",
+      "price": 20
+    }
+  ]
+}

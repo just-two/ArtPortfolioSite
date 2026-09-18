@@ -1,0 +1,21 @@
+{
+  "title": "Yellow Tomato",
+  "medium": "Oil on canvas panel",
+  "dimensions": "4 x 4 in",
+  "year": 2026,
+  "image": "/artwork/yellow_tomato.jpg",
+  "tags": ["oil", "still-life", "fruit", "vegetable", "food"],
+  "featured": true,
+  "description": "A golden study in impasto, treating a single yellow heirloom tomato as a luminous landscape of warm yellow and cool green shadow.",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Original",
+      "price": 400
+    },
+    {
+      "medium": "Print",
+      "price": 20
+    }
+  ]
+}
