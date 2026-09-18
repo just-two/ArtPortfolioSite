@@ -7,13 +7,10 @@ const allPaintings = await getCollection('paintings');
 const availableWorks = allPaintings.filter((piece) => piece.data.for_sale);
 ---
 
-<Layout 
-  title="Available Works — Tahsin" 
-  description="Original oil paintings and studies available for purchase directly from the studio."
->
+<Layout title="Available Works — Tahsin" >
   <section class="shop-header">
     <h1>Available Works</h1>
-    <p>Original oil paintings and studies currently available directly from the studio.</p>
+    <p>Original paintings, available for sale</p>
   </section>
 
   {availableWorks.length > 0 ? (
