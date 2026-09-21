@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import faqData from '../data/faq.json';
+import { SITE_CONFIG } from '../content.config';
 
 interface FAQItem {
   question: string;
@@ -8,6 +9,7 @@ interface FAQItem {
 }
 
 const faqs: FAQItem[] = faqData;
+const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 ---
 
 <Layout 
@@ -36,7 +38,7 @@ const faqs: FAQItem[] = faqData;
 
     <div class="faq-footer">
       <p>Have a question not answered here?</p>
-      <a href="mailto:contact@yourdomain.com" class="contact-link">Get in touch directly →</a>
+      <a href={`mailto:${inquiryEmail}`} class="contact-link">Get in touch directly →</a>
     </div>
   </div>
 </Layout>

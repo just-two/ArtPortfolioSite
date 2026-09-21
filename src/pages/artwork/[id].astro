@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { SITE_CONFIG } from '../../content.config';
+import { commerceEnabled } from '../../lib/features';
 
 export async function getStaticPaths() {
   const paintings = await getCollection('paintings');
@@ -60,13 +61,17 @@ const isDev = import.meta.env.DEV;
           {painting.for_sale && painting.sale_options && painting.sale_options.length > 0 ? (
             <div class="purchase-container">
               <h3 class="purchase-title">
-                Purchase Options {isDev && <span class="dev-badge">(Dev Mode)</span>}
+                {commerceEnabled ? 'Purchase Options' : 'Available'} {isDev && <span class="dev-badge">(Dev Mode)</span>}
               </h3>
               
               <div class="options-list">
                 {painting.sale_options.map((option) => {
                   // Fallback to dummy link (#) in development mode if no real checkout_url exists
                   const href = isDev ? (option.checkout_url || "#") : option.checkout_url;
+
+                  // When commerce is disabled via feature flag, every option becomes an
+                  // "Inquire" mailto action instead of a Stripe checkout link.
+                  const inquiryHref = `mailto:${inquiryEmail}?subject=${encodeURIComponent(`Inquiry: ${painting.title} — ${option.medium}`)}`;
 
                   return (
                     <div class="option-card">
@@ -75,15 +80,21 @@ const isDev = import.meta.env.DEV;
                         <span class="option-price">${option.price} USD</span>
                       </div>
 
-                      {href && (
-                        <a 
-                          href={href} 
-                          class="buy-button" 
-                          target={isDev && href === "#" ? "_self" : "_blank"} 
-                          rel="noopener noreferrer"
-                          onClick={isDev && href === "#" ? "event.preventDefault(); alert('Dev Mode: Checkout disabled.');" : undefined}
-                        >
-                          Buy Now
+                      {commerceEnabled ? (
+                        href && (
+                          <a 
+                            href={href} 
+                            class="buy-button" 
+                            target={isDev && href === "#" ? "_self" : "_blank"} 
+                            rel="noopener noreferrer"
+                            onClick={isDev && href === "#" ? "event.preventDefault(); alert('Dev Mode: Checkout disabled.');" : undefined}
+                          >
+                            Buy Now
+                          </a>
+                        )
+                      ) : (
+                        <a href={inquiryHref} class="buy-button">
+                          Inquire
                         </a>
                       )}
                     </div>
