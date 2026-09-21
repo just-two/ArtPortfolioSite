@@ -56,26 +56,28 @@ const inquiryEmail = SITE_CONFIG?.inquiryEmail || 'tahsinloqman@gmail.com';
 
         <div class="purchase-box">
           {painting.for_sale && painting.sale_options && painting.sale_options.length > 0 ? (
-            <div class="sale-options-list">
-              <h2>Available Purchase Options</h2>
-              {painting.sale_options.map((option) => {
-                const subject = `Inquiry: ${painting.title} (${option.medium})`;
-                const body = `Hi Tahsin,\n\nI am interested in purchasing "${painting.title}" - ${option.medium} ($${option.price}). Could you please provide information on availability and shipping?\n\nThanks!`;
-                return (
-                  <div class="option-row">
-                    <div class="option-details">
+            <div class="purchase-options">
+              <h3>Purchase Options</h3>
+              <ul>
+                {painting.sale_options.map((option) => (
+                  <li class="option-row">
+                    <div>
                       <span class="option-medium">{option.medium}</span>
-                      <span class="option-price">${option.price}</span>
+                      <span class="option-price">${option.price} USD</span>
                     </div>
-                    <a 
-                      href={`mailto:${inquiryEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`} 
-                      class="inquiry-button"
-                    >
-                      Inquire
-                    </a>
-                  </div>
-                );
-              })}
+                    {option.checkout_url && (
+                      <a 
+                        href={option.checkout_url} 
+                        class="buy-button" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                      >
+                        Buy {option.medium}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
           ) : (
             <div class="sale-status private-collection">

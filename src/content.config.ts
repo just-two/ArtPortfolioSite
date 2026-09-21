@@ -25,6 +25,7 @@ const paintingsCollection = defineCollection({
       z.object({
         medium: z.string(), // e.g. "Original", "Limited Edition Print"
         price: z.number(),
+        checkout_url: z.string().url().optional(), // Injected in runner memory at build time
       })
     ).optional(),
   }),

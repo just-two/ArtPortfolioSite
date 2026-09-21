@@ -31,6 +31,11 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+      
+      - name: Generate Stripe Links
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+        run: node scripts/generate-stripe-links.js
 
       - name: Build Static Site with Astro
         run: npm run build

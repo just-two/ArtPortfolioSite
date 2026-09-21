@@ -11,5 +11,8 @@
   },
   "dependencies": {
     "astro": "^7.3.2"
+  },
+  "devDependencies": {
+    "stripe": "^22.6.2"
   }
 }
