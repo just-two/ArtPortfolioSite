@@ -4,7 +4,7 @@ import path from 'node:path';
 
 const apiKey = process.env.STRIPE_SECRET_KEY;
 // Required for Stripe images: Stripe needs a fully qualified public URL
-const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://yourdomain.com').replace(/\/$/, '');
+const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://tahsinloqman.com').replace(/\/$/, '');
 
 if (!apiKey) {
   console.error('❌ FATAL: STRIPE_SECRET_KEY environment variable is not defined.');
