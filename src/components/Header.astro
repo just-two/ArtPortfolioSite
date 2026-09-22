@@ -1,21 +1,8 @@
 ---
 import { mailingListEnabled } from '../lib/features';
-import headerData from '../data/header.json';
 
 const currentPath = Astro.url.pathname;
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
-
-// Optional banner strip below the nav bar, configured in src/data/header.json.
-const banner = headerData.banner;
-const bannerEnabled = banner?.enabled === true && Boolean(banner?.image);
-// Prefix root-absolute paths with the base so the banner resolves under /dev/ too.
-const bannerImage = bannerEnabled
-  ? (banner.image.startsWith('http') ? banner.image : `${baseUrl}${banner.image}`)
-  : '';
-const bannerLink = banner?.link
-  ? (banner.link.startsWith('http') ? banner.link : `${baseUrl}${banner.link}`)
-  : '';
-const bannerAlt = banner?.alt ?? '';
 ---
 
 <header class="site-header">
@@ -47,18 +34,6 @@ const bannerAlt = banner?.alt ?? '';
   </div>
 </header>
 
-{bannerEnabled && (
-  bannerLink ? (
-    <a href={bannerLink} class="site-banner" aria-label={bannerAlt || 'Banner'}>
-      <img src={bannerImage} alt={bannerAlt} />
-    </a>
-  ) : (
-    <div class="site-banner">
-      <img src={bannerImage} alt={bannerAlt} />
-    </div>
-  )
-)}
-
 <script>
   function initMobileMenu() {
     const toggleBtn = document.getElementById('menu-toggle');
@@ -83,29 +58,6 @@ const bannerAlt = banner?.alt ?? '';
     border-bottom: 1px solid #f0f0f0;
     background-color: #ffffff;
     position: relative;
-  }
-
-  /* Full-width banner strip below the nav bar (configured in header.json) */
-  .site-banner {
-    display: block;
-    width: 100%;
-    height: 180px;
-    overflow: hidden;
-    background-color: #f2f2f2;
-    border-bottom: 1px solid #f0f0f0;
-  }
-
-  .site-banner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  @media (max-width: 768px) {
-    .site-banner {
-      height: 120px;
-    }
   }
 
   .header-container {
