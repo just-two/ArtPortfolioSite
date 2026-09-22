@@ -89,7 +89,6 @@ const palette = await getAccentPalette();
           </div>
         )}
         <div class="banner-hero-top-fade" aria-hidden="true"></div>
-        <div class="banner-hero-bottom-fade" aria-hidden="true"></div>
         <Header overlay={true} />
       </div>
     ) : (
@@ -212,18 +211,6 @@ const palette = await getAccentPalette();
     right: 0;
     height: 180px;
     background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0) 100%);
-    pointer-events: none;
-    z-index: 2;
-  }
-
-  /* Slight fade to white along the bottom so the gallery can overlap into it. */
-  .banner-hero-bottom-fade {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 200px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 55%, #ffffff 100%);
     pointer-events: none;
     z-index: 2;
   }
