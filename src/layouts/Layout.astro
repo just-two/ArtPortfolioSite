@@ -10,8 +10,8 @@ interface Props {
   image?: string;
 }
 
-const { 
-  title = "Tahsin — Portfolio", 
+const {
+  title = "Tahsin — Portfolio",
   description = "Art portfolio showcasing oil paintings, still lifes, and studio works.",
   image = "/artwork/twilight-sky.jpg"
 } = Astro.props;
@@ -54,14 +54,14 @@ const palette = await getAccentPalette();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href={faviconHref} />
 
-    <!-- Major Mono Display for the landing hero title -->
+    <!-- Lato for the landing hero title -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" />
 
     <!-- Build-time accent palette derived from the banner image -->
     <style set:html={`:root{--accent:${palette.accent};--accent-soft:${palette.accentSoft};--surface-tint:${palette.surfaceTint};--border-tint:${palette.borderTint};--accent-strong:${palette.accentStrong};}`}></style>
-    
+
     <!-- Primary Meta Tags -->
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -98,7 +98,7 @@ const palette = await getAccentPalette();
           <Header overlay={true} />
         </div>
         <div class="hero-band">
-          <h1 class="hero-band-title">Tahsin Loqman</h1>
+          <h1 class="hero-band-title">TAHSIN LOQMAN</h1>
           <a href={`${baseUrl}/shop`} class="hero-band-cta">See the collection</a>
         </div>
       </>
@@ -248,14 +248,15 @@ const palette = await getAccentPalette();
 
   .hero-band-title {
     margin: 0;
-    font-family: 'Major Mono Display', monospace;
-    color: #3a3a3a;
+    font-family: 'Lato', system-ui, sans-serif;
+    color: #ffffff;
     font-size: clamp(2rem, 7vw, 4.5rem);
-    font-weight: 400;
-    letter-spacing: 0.02em;
+    font-weight: 700;
+    letter-spacing: 0.01em;
     line-height: 1;
     text-align: center;
     white-space: nowrap;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.35);
   }
 
   .hero-band-cta {
