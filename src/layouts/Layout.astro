@@ -54,6 +54,11 @@ const palette = await getAccentPalette();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href={faviconHref} />
 
+    <!-- Major Mono Display for the landing hero title -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap" rel="stylesheet" />
+
     <!-- Build-time accent palette derived from the banner image -->
     <style set:html={`:root{--accent:${palette.accent};--accent-soft:${palette.accentSoft};--surface-tint:${palette.surfaceTint};--border-tint:${palette.borderTint};--accent-strong:${palette.accentStrong};}`}></style>
     
@@ -221,34 +226,36 @@ const palette = await getAccentPalette();
     z-index: 2;
   }
 
-  /* Landing hero band: a 240px saturated-accent strip centered on the SCREEN
-     (viewport), with the title and CTA sitting snugly inside it. */
+  /* Landing hero band: a thin, low-saturation accent strip centered on the
+     SCREEN (viewport). The big title and CTA sit centered over it and spill
+     beyond its 48px height (the band reads as an accent line behind them). */
   .hero-band {
     position: absolute;
     left: 0;
     right: 0;
     top: 50vh; /* center of the viewport, not the (shorter) banner */
     transform: translateY(-50%);
-    height: 240px;
-    background: var(--accent-strong, #333333);
+    height: 48px;
+    background: var(--accent-strong, #d8d8d8);
     z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 1.25rem;
+    overflow: visible;
   }
 
   .hero-band-title {
     margin: 0;
-    color: #ffffff;
-    font-size: clamp(2.5rem, 8vw, 5.5rem);
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-family: 'Major Mono Display', monospace;
+    color: #3a3a3a;
+    font-size: clamp(2rem, 7vw, 4.5rem);
+    font-weight: 400;
+    letter-spacing: 0.02em;
     line-height: 1;
     text-align: center;
     white-space: nowrap;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
   }
 
   .hero-band-cta {

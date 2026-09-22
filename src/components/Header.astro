@@ -36,6 +36,19 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
       {mailingListEnabled && (
         <a href={`${baseUrl}/subscribe`} class:list={[{ active: currentPath.includes('/subscribe') }]}>Subscribe</a>
       )}
+      <a
+        href="https://instagram.com/tahsinl.art"
+        class="nav-instagram"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram (@tahsinl.art)"
+      >
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      </a>
     </nav>
   </div>
 </header>
@@ -81,6 +94,27 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
   /* Landing page uses the big hero band title instead, so hide the top-left brand. */
   .site-header.overlay .brand-title {
     display: none;
+  }
+
+  /* Landing page: center the nav items (brand is hidden). */
+  .site-header.overlay .header-container {
+    justify-content: center;
+  }
+
+  /* Instagram icon link sits inline with the text nav items. */
+  .nav-instagram {
+    display: inline-flex;
+    align-items: center;
+    color: #666666;
+    transition: color 0.2s ease;
+  }
+
+  .nav-instagram:hover {
+    color: var(--accent, #111111);
+  }
+
+  .nav-instagram svg {
+    display: block;
   }
 
   .header-container {

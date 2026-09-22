@@ -17,8 +17,8 @@ import headerData from '../data/header.json';
  *   - accentSoft:  a lighter tint of the primary for hovers / soft fills.
  *   - surfaceTint: a very faint wash for section backgrounds.
  *   - borderTint:  a hairline border color, barely tinted.
- *   - accentStrong: a saturated, vivid version of the accent for bold fills
- *                  (e.g. the landing hero band). Not subtle by design.
+ *   - accentStrong: a muted, low-saturation tone for the thin landing hero
+ *                  band — reads as a soft accent line, not a bold fill.
  *
  * When the banner is disabled/missing or extraction fails, we fall back to the
  * site's existing neutral palette so the look is unchanged.
@@ -37,7 +37,7 @@ const NEUTRAL_FALLBACK: AccentPalette = {
   accentSoft: '#f5f5f5',
   surfaceTint: '#fafafa',
   borderTint: '#f0f0f0',
-  accentStrong: '#333333',
+  accentStrong: '#d8d8d8',
 };
 
 type HSL = { h: number; s: number; l: number };
@@ -58,19 +58,6 @@ function soften(src: HSL, opts: { maxSat: number; targetL: number }): HSL {
   return {
     h: src.h,
     s: clamp(src.s, 0, opts.maxSat),
-    l: opts.targetL,
-  };
-}
-
-/**
- * Intensify a source HSL into a vivid, saturated fill: raise saturation to a
- * floor (or keep the source if already more saturated) and set a rich mid
- * lightness. Used for bold surfaces like the landing hero band.
- */
-function saturate(src: HSL, opts: { minSat: number; targetL: number }): HSL {
-  return {
-    h: src.h,
-    s: clamp(Math.max(src.s, opts.minSat), 0, 100),
     l: opts.targetL,
   };
 }
@@ -117,8 +104,8 @@ export async function getAccentPalette(): Promise<AccentPalette> {
     const surfaceTint = soften(src, { maxSat: 18, targetL: 97 });
     // Hairline border: faint.
     const borderTint = soften(src, { maxSat: 14, targetL: 93 });
-    // Bold, saturated fill for the landing hero band (intentionally vivid).
-    const accentStrong = saturate(src, { minSat: 60, targetL: 40 });
+    // Muted, low-saturation fill for the thin landing hero band (subtle line).
+    const accentStrong = soften(src, { maxSat: 22, targetL: 72 });
 
     return {
       accent: hslToCss(accent),
