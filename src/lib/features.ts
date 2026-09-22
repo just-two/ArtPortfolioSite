@@ -35,3 +35,9 @@ export function getFeature(name: string, defaultValue = false): boolean {
  * Prod: true. Dev: false -> purchasable works fall back to an "Inquire" mailto.
  */
 export const commerceEnabled = getFeature('commerceEnabled', false);
+
+/**
+ * Whether the mailing-list feature (subscribe page, nav link, and popup modal)
+ * is shown. Prod: false. Dev: true.
+ */
+export const mailingListEnabled = getFeature('mailingListEnabled', false);

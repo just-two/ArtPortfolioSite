@@ -4,6 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import ArtCard from '../components/ArtCard.astro';
 import MailingListModal from '../components/MailingListModal.astro';
 import { SITE_CONFIG } from '../content.config';
+import { mailingListEnabled } from '../lib/features';
 
 const allPaintings = await getCollection('paintings');
 const availableWorks = allPaintings.filter((piece) => piece.data.for_sale);
@@ -47,7 +48,7 @@ const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
     )}
   </main>
 
-  <MailingListModal />
+  {mailingListEnabled && <MailingListModal />}
 </Layout>
 
 <style>
