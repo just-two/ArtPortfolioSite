@@ -28,8 +28,10 @@ const paintings = await getCollection('paintings');
 <style>
   .gallery-container {
     max-width: 1400px;
-    margin: 0 auto;
+    margin: -60px auto 0; /* overlap upward into the hero's bottom fade (landing page only) */
     padding: 1rem;
+    position: relative;
+    z-index: 3; /* sit above the hero fades (z-index 2) so the grid appears to start before the hero ends */
   }
 
   .gallery-masonry {
