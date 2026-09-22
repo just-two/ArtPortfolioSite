@@ -16,8 +16,12 @@ const {
 
 // Dynamically resolves site URL for Open Graph tags using Astro config
 const siteUrl = import.meta.env.SITE || "http://localhost:4321";
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' for prod, '/dev' for dev
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
-const socialImageUrl = new URL(image, siteUrl).href;
+// Prefix root-absolute asset paths with the base so OG images resolve under /dev/ too.
+const baseAwareImage = image.startsWith('http') ? image : `${baseUrl}${image}`;
+const socialImageUrl = new URL(baseAwareImage, siteUrl).href;
+const faviconHref = `${baseUrl}/favicon.svg`;
 const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 ---
 
@@ -26,7 +30,7 @@ const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
     
     <!-- Primary Meta Tags -->
     <title>{title}</title>

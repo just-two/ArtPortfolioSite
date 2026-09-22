@@ -44,3 +44,5 @@ Disallow: /
 # Specifically disallow crawling of artwork directory for all bots
 User-agent: *
 Disallow: /artwork/
+# Staging site — keep the dev subtree out of search indexes
+Disallow: /dev/
