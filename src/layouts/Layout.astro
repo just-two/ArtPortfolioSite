@@ -13,18 +13,13 @@ interface Props {
 const {
   title = "Tahsin — Portfolio",
   description = "Art portfolio showcasing oil paintings, still lifes, and studio works.",
-  image = "/artwork/twilight-sky.jpg"
+  image = ""
 } = Astro.props;
 
 // Dynamically resolves site URL for Open Graph tags using Astro config
 const siteUrl = import.meta.env.SITE || "http://localhost:4321";
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' for prod, '/dev' for dev
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
-// Prefix root-absolute asset paths with the base so OG images resolve under /dev/ too.
-const baseAwareImage = image.startsWith('http') ? image : `${baseUrl}${image}`;
-const socialImageUrl = new URL(baseAwareImage, siteUrl).href;
-const faviconHref = `${baseUrl}/favicon.svg`;
-const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 
 // Optional banner strip below the nav bar, configured in src/data/header.json.
 const banner = headerData.banner;
@@ -36,6 +31,13 @@ const bannerLink = banner?.link
   ? (banner.link.startsWith('http') ? banner.link : `${baseUrl}${banner.link}`)
   : '';
 const bannerAlt = banner?.alt ?? '';
+
+const trioOfLimes = `${baseUrl}/artwork/trio_of_limes.jpg`
+
+// Prefix root-absolute asset paths with the base so OG images resolve under /dev/ too.
+const socialImageUrl = new URL(bannerImage, siteUrl).href;
+const faviconHref = `${baseUrl}/favicon.svg`;
+const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 
 // Homepage (gallery) shows a tall hero banner with the nav overlaid; every
 // other page shows the shorter 180px strip below the nav.
@@ -108,11 +110,11 @@ const palette = await getAccentPalette();
         {bannerEnabled && (
           bannerLink ? (
             <a href={bannerLink} class="site-banner" aria-label={bannerAlt || 'Banner'}>
-              <img src={bannerImage} alt={bannerAlt} width="1600" height="180" />
+              <img src={trioOfLimes} alt={bannerAlt} width="1600" height="180" />
             </a>
           ) : (
             <div class="site-banner">
-              <img src={bannerImage} alt={bannerAlt} width="1600" height="180" />
+              <img src={trioOfLimes} alt={bannerAlt} width="1600" height="180" />
             </div>
           )
         )}
