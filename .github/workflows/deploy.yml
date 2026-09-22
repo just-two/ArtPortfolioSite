@@ -1,8 +1,14 @@
 name: Deploy Art Portfolio to GitHub Pages
 
+# Both the production site (/) and the staging site (/dev/) are served from a
+# single GitHub Pages deployment. A push to either `main` (prod) or `dev`
+# (staging) rebuilds BOTH and republishes the combined site, because GitHub
+# Pages replaces the entire site on each deploy — you cannot update /dev/
+# without also re-publishing /.
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "dev"]
+  workflow_dispatch:
 
 # Allow this job to clone the repo and create a page deployment
 permissions:
@@ -20,30 +26,75 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      # ----- Production build (main -> served at /) -----
+      - name: Checkout main (production)
         uses: actions/checkout@v4
+        with:
+          ref: main
+          path: prod
 
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: 'npm'
+          cache-dependency-path: prod/package-lock.json
 
-      - name: Install Dependencies
+      - name: Install Dependencies (prod)
+        working-directory: prod
         run: npm ci
-      
-      - name: Generate Stripe Links
+
+      - name: Generate Stripe Links (prod only)
+        working-directory: prod
         env:
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
         run: node scripts/generate-stripe-links.js
 
-      - name: Build Static Site with Astro
+      - name: Build production site
+        working-directory: prod
+        env:
+          DEPLOY_ENV: prod
         run: npm run build
+
+      # ----- Staging build (dev -> served at /dev/) -----
+      - name: Checkout dev (staging)
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          path: dev
+
+      - name: Install Dependencies (dev)
+        working-directory: dev
+        run: npm ci
+
+      # NOTE: Stripe generation is intentionally skipped for dev. The dev
+      # environment runs with commerceEnabled=false (Inquire mode), so it needs
+      # no Stripe payment links and must never mutate live Stripe state.
+      - name: Build staging site
+        working-directory: dev
+        env:
+          DEPLOY_ENV: dev
+        run: npm run build
+
+      # ----- Combine: prod at root, dev nested under /dev/ -----
+      - name: Assemble combined site
+        run: |
+          set -euo pipefail
+          rm -rf combined
+          # Production output at the root
+          cp -r prod/dist combined
+          # Staging output nested at /dev/ (Astro already emitted it with base=/dev,
+          # so internal links/assets are prefixed correctly)
+          rm -rf combined/dev
+          cp -r dev/dist combined/dev
+          # Defense-in-depth: a robots.txt inside the dev subtree (crawlers only
+          # honor the origin-root robots.txt, which already disallows /dev/).
+          printf 'User-agent: *\nDisallow: /\n' > combined/dev/robots.txt
 
       - name: Upload Build Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./combined
 
   deploy:
     needs: build
