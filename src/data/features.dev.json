@@ -1,3 +1,4 @@
 {
-  "commerceEnabled": false
+  "commerceEnabled": false,
+  "mailingListEnabled": true
 }

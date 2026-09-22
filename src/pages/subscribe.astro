@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import MailingListForm from '../components/MailingListForm.astro';
+import { mailingListEnabled } from '../lib/features';
 ---
 
 <Layout 
@@ -8,14 +9,25 @@ import MailingListForm from '../components/MailingListForm.astro';
   description="Subscribe to receive updates on new studio works, upcoming gallery releases, and available paintings."
 >
   <div class="subscribe-container">
-    <h1>Stay Updated</h1>
-    <p class="subtitle">
-      Join the collector list for early updates on new studio works, print releases, and private viewings.
-    </p>
+    {mailingListEnabled ? (
+      <>
+        <h1>Stay Updated</h1>
+        <p class="subtitle">
+          Join the collector list for early updates on new studio works, print releases, and private viewings.
+        </p>
 
-    <div class="form-wrapper">
-      <MailingListForm />
-    </div>
+        <div class="form-wrapper">
+          <MailingListForm />
+        </div>
+      </>
+    ) : (
+      <>
+        <h1>Coming Soon</h1>
+        <p class="subtitle">
+          The mailing list isn't open just yet. Please check back later.
+        </p>
+      </>
+    )}
   </div>
 </Layout>
 
