@@ -89,7 +89,6 @@ const palette = await getAccentPalette();
           </div>
         )}
         <div class="banner-hero-top-fade" aria-hidden="true"></div>
-        <div class="banner-hero-bottom-fade" aria-hidden="true"></div>
         <Header overlay={true} />
       </div>
     ) : (
@@ -185,7 +184,7 @@ const palette = await getAccentPalette();
   .banner-hero {
     position: relative;
     width: 100%;
-    min-height: 480px;
+    min-height: 50vh;
     overflow: hidden;
     background-color: #f2f2f2;
     line-height: 0;
@@ -194,13 +193,13 @@ const palette = await getAccentPalette();
   .banner-hero-media {
     display: block;
     width: 100%;
-    height: 480px;
+    height: 50vh;
   }
 
   .banner-hero-media img {
     display: block;
     width: 100%;
-    height: 480px; /* explicit height so the image drives the hero size */
+    height: 50vh; /* half the viewport height; image drives the hero size */
     object-fit: cover;
   }
 
@@ -212,18 +211,6 @@ const palette = await getAccentPalette();
     right: 0;
     height: 180px;
     background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0) 100%);
-    pointer-events: none;
-    z-index: 2;
-  }
-
-  /* Banner fades to white along the bottom, blending into the page. */
-  .banner-hero-bottom-fade {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 160px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
     pointer-events: none;
     z-index: 2;
   }
@@ -245,11 +232,13 @@ const palette = await getAccentPalette();
   }
 
   .footer-links a {
-    color: #555555;
+    color: var(--accent, #555555);
+    font-weight: 500;
     text-decoration: none;
   }
 
   .footer-links a:hover {
     color: var(--accent, #111111);
+    filter: brightness(0.8);
   }
 </style>
