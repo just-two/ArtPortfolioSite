@@ -68,12 +68,19 @@ function getDynamicRatioClass(imgPath: string): string {
       width = buffer.readUInt32BE(16);
       height = buffer.readUInt32BE(20);
     } else if (buffer.toString('ascii', 8, 12) === 'WEBP') { // WebP
-      if (buffer.toString('ascii', 12, 16) === 'VP8 ') {
+      const format = buffer.toString('ascii', 12, 16);
+      if (format === 'VP8 ') { // Lossy
         width = buffer.readUInt16LE(26) & 0x3fff;
         height = buffer.readUInt16LE(28) & 0x3fff;
-      } else if (buffer.toString('ascii', 12, 16) === 'VP8X') {
-        width = 1 + buffer.readUInt256LE(24);
-        height = 1 + buffer.readUInt256LE(27);
+      } else if (format === 'VP8L') { // Lossless
+        // Dimensions are packed as 14-bit values starting after the 0x2f signature byte
+        const bits = buffer.readUInt32LE(21);
+        width = (bits & 0x3fff) + 1;
+        height = ((bits >> 14) & 0x3fff) + 1;
+      } else if (format === 'VP8X') { // Extended
+        // Canvas size stored as two 24-bit little-endian integers (value = stored + 1)
+        width = 1 + (buffer[24] | (buffer[25] << 8) | (buffer[26] << 16));
+        height = 1 + (buffer[27] | (buffer[28] << 8) | (buffer[29] << 16));
       }
     }
 

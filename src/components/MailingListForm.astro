@@ -1,21 +1,17 @@
 ---
-interface Props {
-  endpoint?: string;
-}
-
-const { endpoint = "https://formspree.io/f/your-form-id" } = Astro.props;
+// Mailing-list signup is not wired up yet. The form intentionally has no submit
+// target, so the Subscribe button is inert for now (no backend / Formspree).
 ---
 
-<form action={endpoint} method="POST" class="mailing-list-form">
+<form class="mailing-list-form" onsubmit="return false;">
   <div class="form-group">
     <input 
       type="email" 
       name="email" 
       placeholder="Enter your email" 
-      required 
       aria-label="Email address for mailing list"
     />
-    <button type="submit">Subscribe</button>
+    <button type="button">Subscribe</button>
   </div>
 </form>
 

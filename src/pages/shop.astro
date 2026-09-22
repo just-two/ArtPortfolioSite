@@ -3,9 +3,11 @@ import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import ArtCard from '../components/ArtCard.astro';
 import MailingListModal from '../components/MailingListModal.astro';
+import { SITE_CONFIG } from '../content.config';
 
 const allPaintings = await getCollection('paintings');
 const availableWorks = allPaintings.filter((piece) => piece.data.for_sale);
+const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 ---
 
 <Layout 
@@ -38,7 +40,7 @@ const availableWorks = allPaintings.filter((piece) => piece.data.for_sale);
     ) : (
       <div class="empty-state">
         <p>There are currently no original pieces or prints available for immediate purchase.</p>
-        <a href="mailto:contact@yourdomain.com" class="commission-link">
+        <a href={`mailto:${inquiryEmail}`} class="commission-link">
           Inquire about upcoming works or commissions →
         </a>
       </div>
