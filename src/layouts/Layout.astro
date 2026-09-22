@@ -37,6 +37,11 @@ const bannerLink = banner?.link
   : '';
 const bannerAlt = banner?.alt ?? '';
 
+// Homepage (gallery) shows a tall hero banner with the nav overlaid; every
+// other page shows the shorter 180px strip below the nav.
+const isHome = Astro.url.pathname === `${baseUrl}/` || Astro.url.pathname === `${baseUrl}` || Astro.url.pathname === '/';
+const heroMode = bannerEnabled && isHome;
+
 // Build-time accent palette derived from the banner image (subtle; neutral
 // fallback when the banner is off). Injected as :root CSS custom properties.
 const palette = await getAccentPalette();
@@ -72,17 +77,36 @@ const palette = await getAccentPalette();
     <meta name="twitter:image" content={socialImageUrl} />
   </head>
   <body>
-    <Header />
-    {bannerEnabled && (
-      bannerLink ? (
-        <a href={bannerLink} class="site-banner" aria-label={bannerAlt || 'Banner'}>
-          <img src={bannerImage} alt={bannerAlt} width="1600" height="180" />
-        </a>
-      ) : (
-        <div class="site-banner">
-          <img src={bannerImage} alt={bannerAlt} width="1600" height="180" />
-        </div>
-      )
+    {heroMode ? (
+      <div class="banner-hero">
+        {bannerLink ? (
+          <a href={bannerLink} class="banner-hero-media" aria-label={bannerAlt || 'Banner'}>
+            <img src={bannerImage} alt={bannerAlt} width="1600" height="480" />
+          </a>
+        ) : (
+          <div class="banner-hero-media">
+            <img src={bannerImage} alt={bannerAlt} width="1600" height="480" />
+          </div>
+        )}
+        <div class="banner-hero-top-fade" aria-hidden="true"></div>
+        <div class="banner-hero-bottom-fade" aria-hidden="true"></div>
+        <Header overlay={true} />
+      </div>
+    ) : (
+      <>
+        <Header />
+        {bannerEnabled && (
+          bannerLink ? (
+            <a href={bannerLink} class="site-banner" aria-label={bannerAlt || 'Banner'}>
+              <img src={bannerImage} alt={bannerAlt} width="1600" height="180" />
+            </a>
+          ) : (
+            <div class="site-banner">
+              <img src={bannerImage} alt={bannerAlt} width="1600" height="180" />
+            </div>
+          )
+        )}
+      </>
     )}
     <main class="main-content">
       <slot />
@@ -155,6 +179,51 @@ const palette = await getAccentPalette();
     .site-banner img {
       height: 120px;
     }
+  }
+
+  /* Homepage hero banner: full-width image with the nav overlaid on top. */
+  .banner-hero {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    overflow: hidden;
+    background-color: #f2f2f2;
+    line-height: 0;
+  }
+
+  .banner-hero-media,
+  .banner-hero-media img {
+    display: block;
+    width: 100%;
+    height: 480px;
+  }
+
+  .banner-hero-media img {
+    object-fit: cover;
+  }
+
+  /* White gradient descending from the top, giving the nav a legible backdrop. */
+  .banner-hero-top-fade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+    background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Banner fades to white along the bottom, blending into the page. */
+  .banner-hero-bottom-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 160px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+    pointer-events: none;
+    z-index: 2;
   }
 
   .site-footer {
