@@ -29,7 +29,8 @@ const paintings = await getCollection('paintings');
   .gallery-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 1rem;
+    /* clear the hero band, whose lower half (~120px) hangs below the 50vh banner */
+    padding: 140px 1rem 1rem;
   }
 
   .gallery-masonry {
