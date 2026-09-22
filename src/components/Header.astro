@@ -78,6 +78,11 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
     padding-top: 2.25rem; /* extra breathing room so the nav doesn't hug the top edge over the hero */
   }
 
+  /* Landing page uses the big hero band title instead, so hide the top-left brand. */
+  .site-header.overlay .brand-title {
+    display: none;
+  }
+
   .header-container {
     max-width: 1200px;
     margin: 0 auto;

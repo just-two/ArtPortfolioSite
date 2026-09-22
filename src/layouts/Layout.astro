@@ -55,7 +55,7 @@ const palette = await getAccentPalette();
     <link rel="icon" type="image/svg+xml" href={faviconHref} />
 
     <!-- Build-time accent palette derived from the banner image -->
-    <style set:html={`:root{--accent:${palette.accent};--accent-soft:${palette.accentSoft};--surface-tint:${palette.surfaceTint};--border-tint:${palette.borderTint};}`}></style>
+    <style set:html={`:root{--accent:${palette.accent};--accent-soft:${palette.accentSoft};--surface-tint:${palette.surfaceTint};--border-tint:${palette.borderTint};--accent-strong:${palette.accentStrong};}`}></style>
     
     <!-- Primary Meta Tags -->
     <title>{title}</title>
@@ -89,6 +89,10 @@ const palette = await getAccentPalette();
           </div>
         )}
         <div class="banner-hero-top-fade" aria-hidden="true"></div>
+        <div class="hero-band">
+          <h1 class="hero-band-title">Tahsin Loqman</h1>
+          <a href={`${baseUrl}/shop`} class="hero-band-cta">See the collection</a>
+        </div>
         <Header overlay={true} />
       </div>
     ) : (
@@ -213,6 +217,59 @@ const palette = await getAccentPalette();
     background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0) 100%);
     pointer-events: none;
     z-index: 2;
+  }
+
+  /* Landing hero band: a 240px saturated-accent strip centered at 50vh, with
+     the title overflowing its top edge and the CTA overflowing its bottom. */
+  .hero-band {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 240px;
+    background: var(--accent-strong, #333333);
+    z-index: 3;
+  }
+
+  .hero-band-title {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    /* center horizontally, then lift so the text overflows above the band's top edge */
+    transform: translate(-50%, -60%);
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  }
+
+  .hero-band-cta {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    /* center horizontally, then drop so the button overflows below the band's bottom edge */
+    transform: translate(-50%, 50%);
+    display: inline-block;
+    padding: 0.85rem 1.9rem;
+    background: #ffffff;
+    color: #111111;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 4px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .hero-band-cta:hover {
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22);
   }
 
   .site-footer {
