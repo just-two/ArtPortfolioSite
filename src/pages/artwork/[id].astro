@@ -331,7 +331,7 @@ const isDev = import.meta.env.DEV;
   .buy-button {
     display: inline-block;
     padding: 0.55rem 1.15rem;
-    background-color: #111111;
+    background-color: var(--accent, #111111);
     color: #ffffff !important;
     text-decoration: none !important;
     font-size: 0.875rem;
@@ -342,7 +342,8 @@ const isDev = import.meta.env.DEV;
   }
 
   .buy-button:hover {
-    background-color: #333333;
+    background-color: var(--accent, #333333);
+    filter: brightness(0.92);
     color: #ffffff !important;
   }
 
