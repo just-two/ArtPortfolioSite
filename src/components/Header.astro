@@ -1,11 +1,17 @@
 ---
 import { mailingListEnabled } from '../lib/features';
 
+interface Props {
+  overlay?: boolean;
+}
+
+const { overlay = false } = Astro.props;
+
 const currentPath = Astro.url.pathname;
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<header class="site-header">
+<header class:list={["site-header", { overlay }]}>
   <div class="header-container">
     <a href={`${baseUrl}/`} class="brand-title">Tahsin</a>
     
@@ -30,6 +36,19 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
       {mailingListEnabled && (
         <a href={`${baseUrl}/subscribe`} class:list={[{ active: currentPath.includes('/subscribe') }]}>Subscribe</a>
       )}
+      <a
+        href="https://instagram.com/tahsinl.art"
+        class="nav-instagram"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram (@tahsinl.art)"
+      >
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      </a>
     </nav>
   </div>
 </header>
@@ -60,6 +79,44 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
     position: relative;
   }
 
+  /* Overlay mode: header floats over the hero banner (homepage). */
+  .site-header.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    background-color: transparent;
+    border-bottom: none;
+    padding-top: 2.25rem; /* extra breathing room so the nav doesn't hug the top edge over the hero */
+  }
+
+  /* Landing page uses the big hero band title instead, so hide the top-left brand. */
+  .site-header.overlay .brand-title {
+    display: none;
+  }
+
+  /* Landing page: center the nav items (brand is hidden). */
+  .site-header.overlay .header-container {
+    justify-content: center;
+  }
+
+  /* Instagram icon link sits inline with the text nav items. */
+  .nav-instagram {
+    display: inline-flex;
+    align-items: center;
+    color: #666666;
+    transition: color 0.2s ease;
+  }
+
+  .nav-instagram:hover {
+    color: var(--accent, #111111);
+  }
+
+  .nav-instagram svg {
+    display: block;
+  }
+
   .header-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -81,12 +138,13 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
   /* Desktop Navigation */
   .site-nav {
     display: flex;
-    gap: 1.5rem;
+    gap: 2rem;
     align-items: center;
   }
 
   .site-nav a {
-    font-size: 0.95rem;
+    font-size: 1.15rem;
+    font-weight: 500;
     color: #666666;
     text-decoration: none;
     transition: color 0.2s ease;
@@ -94,8 +152,7 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   .site-nav a:hover,
   .site-nav a.active {
-    color: #111111;
-    font-weight: 500;
+    color: var(--accent, #111111);
   }
 
   /* Hamburger Button Styles */
@@ -137,22 +194,25 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
   @media (max-width: 768px) {
     .menu-toggle {
       display: flex; /* Show hamburger button */
+      position: fixed; /* escape header stacking context so it stays above the full-screen nav */
+      top: 1.75rem;
+      right: 1.5rem;
+      z-index: 20;
     }
 
     .site-nav {
       display: none; /* Hide default inline menu */
       flex-direction: column;
       align-items: center;    /* <--- Centered horizontally */
+      justify-content: center; /* center links vertically in the overlay */
       text-align: center;     /* <--- Center aligns link text */
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
+      position: fixed;
+      inset: 0;               /* full-screen overlay */
+      width: 100vw;
+      height: 100vh;
       background-color: #ffffff;
-      padding: 1.5rem;
-      border-bottom: 1px solid #f0f0f0;
-      gap: 1.25rem;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+      padding: 2rem;
+      gap: 2.5rem;
       z-index: 9;
     }
 
@@ -162,7 +222,7 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
     }
 
     .site-nav a {
-      font-size: 1.05rem;
+      font-size: 1.6rem;
     }
   }
 </style>

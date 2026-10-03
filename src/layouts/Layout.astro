@@ -1,28 +1,66 @@
 ---
 import Header from '../components/Header.astro';
 import { SITE_CONFIG } from '../content.config';
+import headerData from '../data/header.json';
+import { getAccentPalette } from '../lib/palette';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  /**
+   * Optional per-page banner image (root-absolute public path, e.g.
+   * "/artwork/foo.jpg"). When provided, it overrides the site-wide banner from
+   * header.json for both the rendered banner strip/hero AND the accent palette.
+   * When omitted, the default banner from header.json is used.
+   */
+  banner?: string;
 }
 
-const { 
-  title = "Tahsin — Portfolio", 
+const {
+  title = "Tahsin — Portfolio",
   description = "Art portfolio showcasing oil paintings, still lifes, and studio works.",
-  image = "/artwork/twilight-sky.jpg"
+  image = "",
+  banner: bannerProp,
 } = Astro.props;
 
 // Dynamically resolves site URL for Open Graph tags using Astro config
 const siteUrl = import.meta.env.SITE || "http://localhost:4321";
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' for prod, '/dev' for dev
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+
+// Optional banner strip below the nav bar. The image can be overridden
+// per-page via the `banner` prop; everything else (enabled flag, alt text,
+// link) comes from the site-wide config in src/data/header.json.
+const banner = headerData.banner;
+// The effective banner image: per-page prop wins, else the configured default.
+const rawBannerImage = bannerProp ?? banner?.image ?? '';
+const bannerEnabled = banner?.enabled === true && Boolean(rawBannerImage);
+// Base-prefixed path for rendering (so assets resolve under /dev/ too).
+const bannerImage = bannerEnabled
+  ? (rawBannerImage.startsWith('http') ? rawBannerImage : `${baseUrl}${rawBannerImage}`)
+  : '';
+const bannerLink = banner?.link
+  ? (banner.link.startsWith('http') ? banner.link : `${baseUrl}${banner.link}`)
+  : '';
+const bannerAlt = banner?.alt ?? '';
+
+const trioOfLimes = `${baseUrl}/artwork/trio_of_limes.jpg`
+
 // Prefix root-absolute asset paths with the base so OG images resolve under /dev/ too.
-const baseAwareImage = image.startsWith('http') ? image : `${baseUrl}${image}`;
-const socialImageUrl = new URL(baseAwareImage, siteUrl).href;
+const socialImageUrl = new URL(bannerImage, siteUrl).href;
 const faviconHref = `${baseUrl}/favicon.svg`;
 const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
+
+// Homepage (gallery) shows a tall hero banner with the nav overlaid; every
+// other page shows the shorter 180px strip below the nav.
+const isHome = Astro.url.pathname === `${baseUrl}/` || Astro.url.pathname === `${baseUrl}` || Astro.url.pathname === '/';
+const heroMode = bannerEnabled && isHome;
+
+// Build-time accent palette derived from the effective banner image (the
+// per-page `banner` prop when given, else the header.json default). Subtle;
+// neutral fallback when the banner is off. Injected as :root CSS custom props.
+const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
 ---
 
 <!DOCTYPE html>
@@ -31,7 +69,15 @@ const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href={faviconHref} />
-    
+
+    <!-- Lato for the landing hero title -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Build-time accent palette derived from the banner image -->
+    <style set:html={`:root{--accent:${palette.accent};--accent-soft:${palette.accentSoft};--surface-tint:${palette.surfaceTint};--border-tint:${palette.borderTint};--accent-strong:${palette.accentStrong};}`}></style>
+
     <!-- Primary Meta Tags -->
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -52,7 +98,42 @@ const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
     <meta name="twitter:image" content={socialImageUrl} />
   </head>
   <body>
-    <Header />
+    {heroMode ? (
+      <>
+        <div class="banner-hero">
+          {bannerLink ? (
+            <a href={bannerLink} class="banner-hero-media" aria-label={bannerAlt || 'Banner'}>
+              <img src={bannerImage} alt={bannerAlt} width="1600" height="480" />
+            </a>
+          ) : (
+            <div class="banner-hero-media">
+              <img src={bannerImage} alt={bannerAlt} width="1600" height="480" />
+            </div>
+          )}
+          <div class="banner-hero-top-fade" aria-hidden="true"></div>
+          <Header overlay={true} />
+        </div>
+        <div class="hero-band">
+          <h1 class="hero-band-title">TAHSIN LOQMAN</h1>
+          <a href={`${baseUrl}/shop`} class="hero-band-cta">Shop the Collection</a>
+        </div>
+      </>
+    ) : (
+      <>
+        <Header />
+        {bannerEnabled && (
+          bannerLink ? (
+            <a href={bannerLink} class="site-banner" aria-label={bannerAlt || 'Banner'}>
+              <img src={trioOfLimes} alt={bannerAlt} width="1600" height="180" />
+            </a>
+          ) : (
+            <div class="site-banner">
+              <img src={trioOfLimes} alt={bannerAlt} width="1600" height="180" />
+            </div>
+          )
+        )}
+      </>
+    )}
     <main class="main-content">
       <slot />
     </main>
@@ -98,6 +179,120 @@ const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
     padding: 2.5rem 1.5rem;
   }
 
+  /* Full-width banner strip below the nav bar (configured in header.json) */
+  .site-banner {
+    display: block;
+    width: 100%;
+    min-height: 180px;
+    line-height: 0; /* prevent inline-baseline gap collapsing the anchor */
+    overflow: hidden;
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .site-banner img {
+    width: 100%;
+    height: 180px; /* explicit height so the image drives the strip size */
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .site-banner {
+      min-height: 120px;
+    }
+
+    .site-banner img {
+      height: 120px;
+    }
+  }
+
+  /* Homepage hero banner: full-width image with the nav overlaid on top. */
+  .banner-hero {
+    position: relative;
+    width: 100%;
+    min-height: 50vh;
+    overflow: hidden;
+    background-color: #f2f2f2;
+    line-height: 0;
+  }
+
+  .banner-hero-media {
+    display: block;
+    width: 100%;
+    height: 50vh;
+  }
+
+  .banner-hero-media img {
+    display: block;
+    width: 100%;
+    height: 50vh; /* half the viewport height; image drives the hero size */
+    object-fit: cover;
+  }
+
+  /* White gradient descending from the top, giving the nav a legible backdrop. */
+  .banner-hero-top-fade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+    background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Landing hero band: a thin, low-saturation accent strip centered on the
+     SCREEN (viewport). The big title and CTA sit centered over it and spill
+     beyond its 48px height (the band reads as an accent line behind them). */
+  .hero-band {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50vh; /* center of the viewport, not the (shorter) banner */
+    transform: translateY(-50%);
+    height: 48px;
+    background: var(--accent-strong, #d8d8d8);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    overflow: visible;
+  }
+
+  .hero-band-title {
+    margin: 0;
+    font-family: 'Lato', system-ui, sans-serif;
+    color: #ffffff;
+    font-size: clamp(2rem, 7vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+
+  .hero-band-cta {
+    display: inline-block;
+    padding: 0.85rem 1.9rem;
+    background: #ffffff;
+    color: #111111;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 4px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .hero-band-cta:hover {
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22);
+  }
+
   .site-footer {
     padding: 2rem 1.5rem;
     border-top: 1px solid #f0f0f0;
@@ -115,11 +310,13 @@ const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
   }
 
   .footer-links a {
-    color: #555555;
+    color: var(--accent, #555555);
+    font-weight: 500;
     text-decoration: none;
   }
 
   .footer-links a:hover {
-    color: #111111;
+    color: var(--accent, #111111);
+    filter: brightness(0.8);
   }
 </style>

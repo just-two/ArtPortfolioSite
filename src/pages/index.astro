@@ -2,11 +2,12 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import ArtCard from '../components/ArtCard.astro';
+import { sortPainting } from '../lib/collection';
 
-const paintings = await getCollection('paintings');
+const paintings = (await getCollection('paintings')).sort(sortPainting);
 ---
 
-<Layout title="Gallery — Tahsin">
+<Layout title="Gallery — Tahsin" banner="/artwork/trio_of_tomatoes.jpg">
   <main class="gallery-container">
     <div class="gallery-masonry">
       {paintings.map((piece) => (
@@ -29,7 +30,8 @@ const paintings = await getCollection('paintings');
   .gallery-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 1rem;
+    /* clear the hero band + CTA, which sit centered at 50vh and spill below the banner */
+    padding: 90px 1rem 1rem;
   }
 
   .gallery-masonry {

@@ -48,6 +48,16 @@ async function resolveStripeLinks() {
       item.sale_options = await Promise.all(
         item.sale_options.map(async (option, index) => {
           const optionKey = `${itemId}:${index}`;
+
+          // Skip Stripe entirely for options that have no internal price to sell
+          // on: either the price is set/handled externally (print_url) or it is
+          // intentionally omitted (e.g. an original negotiated from scratch).
+          // These render as Inquire-only on the site, so they need no payment
+          // link — and we must NOT feed an undefined price to Stripe.
+          if (option.print_url || option.price == null) {
+            return option;
+          }
+
           activeOptionKeys.add(optionKey);
 
           const expectedAmountCents = Math.round(option.price * 100);
