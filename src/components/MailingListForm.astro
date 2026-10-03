@@ -1,18 +1,24 @@
 ---
-// Mailing-list signup is not wired up yet. The form intentionally has no submit
-// target, so the Subscribe button is inert for now (no backend / Formspree).
+// Mailing-list signup posts the subscriber's email to a Google Apps Script
+// Web App endpoint (configured in src/data/external.json). The endpoint expects
+// a JSON body of the shape { "email": "email@domain.tld" }.
+import externalData from '../data/external.json';
+
+const emailListEndpoint = externalData.emailList;
 ---
 
-<form class="mailing-list-form" onsubmit="return false;">
+<form class="mailing-list-form" data-endpoint={emailListEndpoint}>
   <div class="form-group">
     <input 
       type="email" 
       name="email" 
       placeholder="Enter your email" 
       aria-label="Email address for mailing list"
+      required
     />
-    <button type="button">Subscribe</button>
+    <button type="submit">Subscribe</button>
   </div>
+  <p class="form-status" role="status" aria-live="polite" hidden></p>
 </form>
 
 <style>
@@ -72,4 +78,96 @@
     margin: 0;
     text-align: center;
   }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .form-status {
+    font-size: 0.85rem;
+    margin: 0;
+    text-align: center;
+  }
+
+  .form-status.is-success {
+    color: #2f7d32;
+  }
+
+  .form-status.is-error {
+    color: #c0392b;
+  }
 </style>
+
+<script>
+  function initMailingListForms() {
+    const forms = document.querySelectorAll<HTMLFormElement>('.mailing-list-form');
+
+    forms.forEach((form) => {
+      // Guard against double-binding across Astro view transitions.
+      if (form.dataset.bound === 'true') return;
+      form.dataset.bound = 'true';
+
+      const endpoint = form.dataset.endpoint;
+      const input = form.querySelector<HTMLInputElement>('input[name="email"]');
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const status = form.querySelector<HTMLParagraphElement>('.form-status');
+
+      function setStatus(message: string, kind: 'success' | 'error') {
+        if (!status) return;
+        status.textContent = message;
+        status.classList.remove('is-success', 'is-error');
+        status.classList.add(kind === 'success' ? 'is-success' : 'is-error');
+        status.hidden = false;
+      }
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const email = input?.value.trim() ?? '';
+        // Rely on the browser's built-in email validation first.
+        if (!email || (input && !input.checkValidity())) {
+          input?.reportValidity();
+          return;
+        }
+
+        if (!endpoint) {
+          setStatus('Subscription is temporarily unavailable. Please try again later.', 'error');
+          return;
+        }
+
+        if (button) {
+          button.disabled = true;
+          button.textContent = 'Subscribing…';
+        }
+
+        try {
+          // Google Apps Script Web Apps do not return permissive CORS headers,
+          // so a readable (cors) request with a JSON content-type would trigger
+          // a preflight the endpoint cannot answer. We POST with mode:'no-cors';
+          // the response is opaque (unreadable), so a request that completes
+          // without throwing is treated as success.
+          await fetch(endpoint, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ email }),
+          });
+
+          setStatus('Thanks for subscribing!', 'success');
+          form.reset();
+        } catch {
+          setStatus('Something went wrong. Please try again.', 'error');
+        } finally {
+          if (button) {
+            button.disabled = false;
+            button.textContent = 'Subscribe';
+          }
+        }
+      });
+    });
+  }
+
+  initMailingListForms();
+  document.addEventListener('astro:page-load', initMailingListForms);
+</script>
