@@ -4,6 +4,14 @@ import Layout from '../../layouts/Layout.astro';
 import { SITE_CONFIG } from '../../content.config';
 import { commerceEnabled } from '../../lib/features';
 
+export async function getStaticPaths() {
+  const paintings = await getCollection('paintings');
+  return paintings.map((entry) => ({
+    params: { id: entry.id },
+    props: { painting: entry.data },
+  }));
+}
+
 const { painting } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 const inquiryEmail = SITE_CONFIG?.inquiryEmail || 'tahsinloqman@gmail.com';
