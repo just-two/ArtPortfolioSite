@@ -25,7 +25,7 @@ const isDev = import.meta.env.DEV;
   image={painting.image}
 >
   <div class="detail-container">
-    <a href={`${baseUrl}/`} class="back-link">← Back to Gallery</a>
+    <a href={`${baseUrl}/shop`} class="back-link">← Back to Shop</a>
 
     <div class="detail-grid">
       <div class="artwork-display">
@@ -73,15 +73,31 @@ const isDev = import.meta.env.DEV;
                   // "Inquire" mailto action instead of a Stripe checkout link.
                   const inquiryHref = `mailto:${inquiryEmail}?subject=${encodeURIComponent(`Inquiry: ${painting.title} — ${option.medium}`)}`;
 
+                  // An external print-shop link (e.g. a print-on-demand site). When
+                  // present, surface a direct "Buy" button pointing at it, while still
+                  // always offering the "Inquire" mailto path alongside.
+                  const printUrl = option.print_url;
+
                   return (
                     <div class="option-card">
                       <div class="option-details">
                         <span class="option-medium">{option.medium}</span>
-                        <span class="option-price">${option.price} USD</span>
+                        {!printUrl && option.price != null && (
+                          <span class="option-price">${option.price} USD</span>
+                        )}
                       </div>
 
-                      {commerceEnabled ? (
-                        href && (
+                      <div class="option-actions">
+                        {printUrl ? (
+                          <a
+                            href={printUrl}
+                            class="buy-button"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Buy Online
+                          </a>
+                        ) : commerceEnabled && href ? (
                           <a 
                             href={href} 
                             class="buy-button" 
@@ -91,12 +107,12 @@ const isDev = import.meta.env.DEV;
                           >
                             Buy Now
                           </a>
-                        )
-                      ) : (
-                        <a href={inquiryHref} class="buy-button">
-                          Inquire
-                        </a>
-                      )}
+                        ) : (
+                          <a href={inquiryHref} class="buy-button">
+                            Inquire
+                          </a>
+                        )}
+                      </div>
                     </div>
                   );
                 })}
@@ -351,11 +367,42 @@ const isDev = import.meta.env.DEV;
     color: #ffffff !important;
   }
 
+  /* Wrapper for one or more action buttons on a sale option (e.g. Buy +
+     Inquire when an external print_url is present). */
+  .option-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  /* Secondary action (the always-present Inquire mailto): same shape as the
+     primary button but a quiet, light treatment so Buy reads as primary. */
+  .buy-button.secondary {
+    background-color: #f5f5f5;
+    color: #333333 !important;
+    border: 1px solid #e0e0e0;
+  }
+
+  .buy-button.secondary:hover {
+    background-color: #ececec;
+    filter: none;
+    color: #333333 !important;
+  }
+
+  .buy-button.secondary:visited {
+    color: #333333 !important;
+  }
+
   @media (max-width: 480px) {
     .option-card {
       flex-direction: column;
       align-items: flex-start;
       gap: 0.75rem;
+    }
+
+    .option-actions {
+      width: 100%;
     }
 
     .buy-button {

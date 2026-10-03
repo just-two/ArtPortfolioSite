@@ -8,12 +8,20 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  /**
+   * Optional per-page banner image (root-absolute public path, e.g.
+   * "/artwork/foo.jpg"). When provided, it overrides the site-wide banner from
+   * header.json for both the rendered banner strip/hero AND the accent palette.
+   * When omitted, the default banner from header.json is used.
+   */
+  banner?: string;
 }
 
 const {
   title = "Tahsin — Portfolio",
   description = "Art portfolio showcasing oil paintings, still lifes, and studio works.",
   image = ""
+  banner: bannerProp,
 } = Astro.props;
 
 // Dynamically resolves site URL for Open Graph tags using Astro config
@@ -21,11 +29,16 @@ const siteUrl = import.meta.env.SITE || "http://localhost:4321";
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' for prod, '/dev' for dev
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 
-// Optional banner strip below the nav bar, configured in src/data/header.json.
+// Optional banner strip below the nav bar. The image can be overridden
+// per-page via the `banner` prop; everything else (enabled flag, alt text,
+// link) comes from the site-wide config in src/data/header.json.
 const banner = headerData.banner;
-const bannerEnabled = banner?.enabled === true && Boolean(banner?.image);
+// The effective banner image: per-page prop wins, else the configured default.
+const rawBannerImage = bannerProp ?? banner?.image ?? '';
+const bannerEnabled = banner?.enabled === true && Boolean(rawBannerImage);
+// Base-prefixed path for rendering (so assets resolve under /dev/ too).
 const bannerImage = bannerEnabled
-  ? (banner.image.startsWith('http') ? banner.image : `${baseUrl}${banner.image}`)
+  ? (rawBannerImage.startsWith('http') ? rawBannerImage : `${baseUrl}${rawBannerImage}`)
   : '';
 const bannerLink = banner?.link
   ? (banner.link.startsWith('http') ? banner.link : `${baseUrl}${banner.link}`)
@@ -44,9 +57,10 @@ const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 const isHome = Astro.url.pathname === `${baseUrl}/` || Astro.url.pathname === `${baseUrl}` || Astro.url.pathname === '/';
 const heroMode = bannerEnabled && isHome;
 
-// Build-time accent palette derived from the banner image (subtle; neutral
-// fallback when the banner is off). Injected as :root CSS custom properties.
-const palette = await getAccentPalette();
+// Build-time accent palette derived from the effective banner image (the
+// per-page `banner` prop when given, else the header.json default). Subtle;
+// neutral fallback when the banner is off. Injected as :root CSS custom props.
+const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
 ---
 
 <!DOCTYPE html>

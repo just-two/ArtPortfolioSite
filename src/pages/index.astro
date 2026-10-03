@@ -6,7 +6,7 @@ import ArtCard from '../components/ArtCard.astro';
 const paintings = await getCollection('paintings');
 ---
 
-<Layout title="Gallery — Tahsin">
+<Layout title="Gallery — Tahsin" banner="/artwork/heirloom_tomatoes.jpg">
   <main class="gallery-container">
     <div class="gallery-masonry">
       {paintings.map((piece) => (

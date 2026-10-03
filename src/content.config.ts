@@ -24,8 +24,9 @@ const paintingsCollection = defineCollection({
     sale_options: z.array(
       z.object({
         medium: z.string(), // e.g. "Original", "Limited Edition Print"
-        price: z.number(),
+        price: z.number().optional(), // Omit when the price is set externally (prints) or negotiated (originals)
         checkout_url: z.string().url().optional(), // Injected in runner memory at build time
+        print_url: z.string().url().optional(), // External site where customers can buy prints
       })
     ).optional(),
   }),

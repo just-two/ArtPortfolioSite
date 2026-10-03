@@ -1,10 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { Vibrant } from 'node-vibrant/node';
-import headerData from '../data/header.json';
 
 /**
- * Build-time accent palette derived from the header banner image.
+ * Build-time accent palette derived from a banner image.
  *
  * The site is intentionally mostly white; these tokens are *subtle* accents.
  * We extract dominant colors from the banner at build time (no client JS, no
@@ -63,16 +62,18 @@ function soften(src: HSL, opts: { maxSat: number; targetL: number }): HSL {
 }
 
 /**
- * Resolve the accent palette from the configured banner image.
+ * Resolve the accent palette from a banner image path.
+ *
+ * @param imagePath A root-absolute public asset path (e.g. "/artwork/foo.jpg").
+ *                  When omitted, remote (http...), or not found on disk, the
+ *                  neutral fallback palette is returned so the look is unchanged.
+ *
  * Async because color extraction reads and decodes the image.
  */
-export async function getAccentPalette(): Promise<AccentPalette> {
-  const banner = headerData.banner;
-  const enabled = banner?.enabled === true && Boolean(banner?.image);
-  if (!enabled) return NEUTRAL_FALLBACK;
+export async function getAccentPalette(imagePath?: string | null): Promise<AccentPalette> {
+  if (!imagePath) return NEUTRAL_FALLBACK;
 
   // Only local public assets are supported for build-time extraction.
-  const imagePath = banner.image;
   if (imagePath.startsWith('http')) return NEUTRAL_FALLBACK;
 
   const localPath = path.join(process.cwd(), 'public', imagePath);
