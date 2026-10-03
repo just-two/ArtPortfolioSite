@@ -10,6 +10,7 @@ export const SITE_CONFIG = {
 const paintingsCollection = defineCollection({
   loader: glob({ pattern: '**/*.json', base: './src/content/paintings' }),
   schema: z.object({
+    order: z.number().optional(),
     title: z.string(),
     medium: z.string(),
     dimensions: z.string(),
@@ -25,6 +26,7 @@ const paintingsCollection = defineCollection({
       z.object({
         medium: z.string(), // e.g. "Original", "Limited Edition Print"
         price: z.number().optional(), // Omit when the price is set externally (prints) or negotiated (originals)
+        price_minimum: z.number().optional(), // Minimum price on an external site
         checkout_url: z.string().url().optional(), // Injected in runner memory at build time
         print_url: z.string().url().optional(), // External site where customers can buy prints
       })

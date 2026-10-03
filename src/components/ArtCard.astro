@@ -34,12 +34,10 @@ const {
 } = Astro.props;
 
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
-const mediumLabel = displayMedium || medium;
 
-// Helper to determine image bucket dynamically at build time
+// Helper to determine image bucket dynamically at build time (7 buckets)
 function getDynamicRatioClass(imgPath: string): string {
   try {
-    // Resolve absolute path to the local public directory image
     const localPath = path.join(process.cwd(), 'public', imgPath);
     if (!fs.existsSync(localPath)) return 'ratio-natural';
 
@@ -69,12 +67,10 @@ function getDynamicRatioClass(imgPath: string): string {
         width = buffer.readUInt16LE(26) & 0x3fff;
         height = buffer.readUInt16LE(28) & 0x3fff;
       } else if (format === 'VP8L') { // Lossless
-        // Dimensions are packed as 14-bit values starting after the 0x2f signature byte
         const bits = buffer.readUInt32LE(21);
         width = (bits & 0x3fff) + 1;
         height = ((bits >> 14) & 0x3fff) + 1;
       } else if (format === 'VP8X') { // Extended
-        // Canvas size stored as two 24-bit little-endian integers (value = stored + 1)
         width = 1 + (buffer[24] | (buffer[25] << 8) | (buffer[26] << 16));
         height = 1 + (buffer[27] | (buffer[28] << 8) | (buffer[29] << 16));
       }
@@ -84,24 +80,36 @@ function getDynamicRatioClass(imgPath: string): string {
 
     const ratio = width / height;
 
-    // Match to closest bucket
-    if (ratio >= 1.35) return 'ratio-landscape'; // ~3:2 (1.5)
-    if (ratio >= 0.9 && ratio < 1.35) return 'ratio-square'; // ~1:1
-    if (ratio >= 0.75 && ratio < 0.9) return 'ratio-portrait'; // ~4:5 (0.8)
-    return 'ratio-tall'; // ~2:3 (0.66) or taller
+    // 7 distinct ratio buckets based on calculated aspect ratio
+    if (ratio >= 1.75) return 'ratio-panoramic';       // ~16:9 or wider (1.78+)
+    if (ratio >= 1.35) return 'ratio-landscape';       // ~3:2 (1.5)
+    if (ratio >= 1.1)  return 'ratio-square-wide';     // ~5:4 wide square (1.25)
+    if (ratio >= 0.9)  return 'ratio-square';          // ~1:1 square (1.0)
+    if (ratio >= 0.75) return 'ratio-portrait';        // ~4:5 portrait (0.8)
+    if (ratio >= 0.55) return 'ratio-tall';            // ~2:3 tall portrait (0.66)
+    return 'ratio-ultra-tall';                         // ~1:2 ultra-tall vertical (< 0.55)
   } catch (err) {
     return 'ratio-natural';
   }
 }
 
 const ratioClass = uniform ? 'ratio-shop' : getDynamicRatioClass(image);
+
+function getPrice(value: any): string {
+  if (value.price) {
+    return "$" + value.price;
+  }
+  if (value.price_minimum) {
+    return "$" + value.price_minimum + "+";
+  }
+  return " Various Prices";
+}
 ---
 
 <div class={`art-card ${uniform ? 'is-uniform' : ''}`}>
   <a href={`${baseUrl}/artwork/${id}`} aria-label={title}>
     <div class={`image-wrapper ${ratioClass}`}>
       <img src={`${baseUrl}${image}`} alt={title} loading="lazy" />
-      {forSale && <span class="availability-badge">Available</span>}
     </div>
 
     {showDetails && (
@@ -109,7 +117,18 @@ const ratioClass = uniform ? 'ratio-shop' : getDynamicRatioClass(image);
         <div class="title-row">
           <h2>{title}</h2>
         </div>
-        <p>{mediumLabel}{year ? ` • ${year}` : ''}</p>
+        <p>
+          {saleOptions && saleOptions.length > 0 ? (
+            saleOptions.map((opt, index) => (
+              <span>
+                {index > 0 && " • "}
+                {opt.medium} <i>{getPrice(opt)}</i>
+              </span>
+            ))
+          ) : (
+            "Not Available"
+          )}
+        </p>
       </div>
     )}
   </a>
@@ -148,9 +167,17 @@ const ratioClass = uniform ? 'ratio-shop' : getDynamicRatioClass(image);
     display: block;
   }
 
-  /* Aspect Ratio Buckets */
+  /* 7 Aspect Ratio Options */
+  .image-wrapper.ratio-panoramic {
+    aspect-ratio: 16 / 9;
+  }
+
   .image-wrapper.ratio-landscape {
     aspect-ratio: 3 / 2;
+  }
+
+  .image-wrapper.ratio-square-wide {
+    aspect-ratio: 5 / 4;
   }
 
   .image-wrapper.ratio-square {
@@ -165,6 +192,11 @@ const ratioClass = uniform ? 'ratio-shop' : getDynamicRatioClass(image);
     aspect-ratio: 2 / 3;
   }
 
+  .image-wrapper.ratio-ultra-tall {
+    aspect-ratio: 1 / 2;
+  }
+
+  /* Uniform Shop Fallback */
   .image-wrapper.ratio-shop {
     aspect-ratio: 4 / 3;
   }

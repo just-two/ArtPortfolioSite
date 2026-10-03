@@ -5,9 +5,11 @@ import ArtCard from '../components/ArtCard.astro';
 import MailingListModal from '../components/MailingListModal.astro';
 import { SITE_CONFIG } from '../content.config';
 import { mailingListEnabled } from '../lib/features';
+import { sortPainting } from '../lib/collection'; 
 
-const allPaintings = await getCollection('paintings');
-const availableWorks = allPaintings.filter((piece) => piece.data.for_sale);
+const paintings = (await getCollection('paintings')).sort(sortPainting);
+const availableWorks = paintings.filter((piece) => piece.data.for_sale);
+console.log(availableWorks.map(a => a.data.title + " " + a.data.order))
 const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 ---
 

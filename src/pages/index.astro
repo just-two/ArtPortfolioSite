@@ -2,8 +2,9 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import ArtCard from '../components/ArtCard.astro';
+import { sortPainting } from '../lib/collection';
 
-const paintings = await getCollection('paintings');
+const paintings = (await getCollection('paintings')).sort(sortPainting);
 ---
 
 <Layout title="Gallery — Tahsin" banner="/artwork/trio_of_tomatoes.jpg">
