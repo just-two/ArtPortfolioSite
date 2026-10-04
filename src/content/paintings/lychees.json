@@ -6,12 +6,13 @@
   "image": "/artwork/lychees.jpg",
   "tags": ["oil", "still-life", "fruit", "food"],
   "featured": true,
-  "description": "Two lychees, one partially peeled",
+  "description": "Two lychees are depicted against a gray cloth. One lychee is whole, while the other is partially peeled open to reveal its juicy interior. An original oil painting created from life.",
   "for_sale": true,
   "sale_options": [
     {
-      "medium": "Original",
-      "price": 400
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/lychees-tahsin-loqman.html",
+      "price_minimum": 12.35
     }
   ]
 }
