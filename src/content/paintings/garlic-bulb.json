@@ -6,12 +6,17 @@
   "image": "/artwork/garlic_bulb.jpg",
   "tags": ["oil", "still-life", "vegetable", "food"],
   "featured": true,
-  "description": "A garlic bulb",
+  "description": "An original oil painting showcasing a single garlic bulb.",
   "for_sale": true,
   "sale_options": [
     {
       "medium": "Original",
-      "price": 400
+      "price": 175
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/garlic-bulb-1-tahsin-loqman.html",
+      "price_minimum": 12.35
     }
   ]
 }

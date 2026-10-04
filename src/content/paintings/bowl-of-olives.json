@@ -6,12 +6,17 @@
   "image": "/artwork/bowl_of_olives.jpg",
   "tags": ["oil", "still-life", "fruit"],
   "featured": true,
-  "description": "A bowl of olives, in a white ceramic bowl",
+  "description": "Seasoned olives in a white ceramic bowl. An original oil painting created from life.",
   "for_sale": true,
   "sale_options": [
     {
       "medium": "Original",
-      "price": 600
+      "price": 390
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/bowl-of-green-olives-tahsin-loqman.htmll",
+      "price_minimum": 12.35
     }
   ]
 }

@@ -6,12 +6,17 @@
   "image": "/artwork/bowl_of_blueberries.jpg",
   "tags": ["oil", "still-life", "fruit"],
   "featured": true,
-  "description": "A bowl of blueberries, in a blueberry ceramic bowl",
+  "description": "A bunch of blueberries in a blueberry Le Creuset bowl. An original oil painting created from life.",
   "for_sale": true,
   "sale_options": [
     {
       "medium": "Original",
-      "price": 600
+      "price": 350
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/blueberries-in-a-blueberry-bowl-tahsin-loqman.html",
+      "price_minimum": 12.35
     }
   ]
 }

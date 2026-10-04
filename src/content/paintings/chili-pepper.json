@@ -6,12 +6,17 @@
   "image": "/artwork/chili_pepper.jpg",
   "tags": ["oil", "still-life", "fruit"],
   "featured": true,
-  "description": "A red hot chili pepper",
+  "description": "A red chili pepper on a gray cloth. An original oil painting created from life.",
   "for_sale": true,
   "sale_options": [
     {
       "medium": "Original",
-      "price": 400
+      "price": 150
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/red-chili-pepper-tahsin-loqman.html",
+      "price_minimum": 12.35
     }
   ]
 }
