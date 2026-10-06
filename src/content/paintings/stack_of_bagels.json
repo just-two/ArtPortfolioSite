@@ -1,0 +1,18 @@
+{
+  "title": "Stack of Bagels",
+  "medium": "Oil on canvas panel",
+  "dimensions": "5 x 7 in",
+  "year": 2023,
+  "image": "/artwork/stack_of_bagels.jpg",
+  "tags": ["oil", "still-life", "food", "breakfast"],
+  "featured": true,
+  "description": "An original oil painting featuring four bagels stacked vertically. The different bagel flavors showcases a variety of textures.",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/a-stack-of-bagels-tahsin-loqman.html?product=art-print",
+      "price_minimum": 17
+    }
+  ]
+}

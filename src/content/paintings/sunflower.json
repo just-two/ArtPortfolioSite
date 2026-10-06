@@ -1,0 +1,18 @@
+{
+  "title": "Sunflower",
+  "medium": "Oil on canvas panel",
+  "dimensions": "5 x 7 in",
+  "year": 2023,
+  "image": "/artwork/sunflower.jpg",
+  "tags": ["oil", "floral"],
+  "featured": true,
+  "description": "A yellow sunflower",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/vibrant-sunflower-on-textured-background-tahsin-loqman.html?product=art-print",
+      "price_minimum": 17
+    }
+  ]
+}

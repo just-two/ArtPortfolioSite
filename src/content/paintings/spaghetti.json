@@ -11,7 +11,12 @@
   "sale_options": [
     {
       "medium": "Original",
-      "price": 400
+      "price": 190
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/spaghetti-with-basil-leaf-tahsin-loqman.html?product=art-print",
+      "price_minimum": 17
     }
   ]
 }

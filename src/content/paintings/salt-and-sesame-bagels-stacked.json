@@ -11,7 +11,12 @@
   "sale_options": [
     {
       "medium": "Original",
-      "price": 600
+      "price": 400
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/a-stack-of-bagels-tahsin-loqman.html?product=art-print",
+      "price_minimum": 17
     }
   ]
 }
