@@ -1,0 +1,22 @@
+{
+  "title": "Mapo Tofu",
+  "medium": "Oil on canvas panel",
+  "dimensions": "5 x 7 in",
+  "year": 2023,
+  "image": "/artwork/tofu.jpg",
+  "tags": ["oil", "food", "still life"],
+  "featured": true,
+  "description": "A single piece of mapo tofu topped with a slice of scallion. An original oil painting created from life.",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Original",
+      "price": 170
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/a-single-piece-of-mapo-tofu-tahsin-loqman.html?product=art-print",
+      "price_minimum": 17
+    }
+  ]
+}

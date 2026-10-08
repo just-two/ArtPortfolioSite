@@ -6,12 +6,17 @@
   "image": "/artwork/guava.jpg",
   "tags": ["oil", "still-life", "fruit", "food"],
   "featured": true,
-  "description": "A whole guava on a plate",
+  "description": "A whole guava on a wooden plate. An original oil painting created from life.",
   "for_sale": true,
   "sale_options": [
     {
       "medium": "Original",
-      "price": 600
+      "price": 400
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/guava-tahsin-loqman.html",
+      "price_minimum": 17
     }
   ]
 }

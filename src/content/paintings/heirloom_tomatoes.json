@@ -1,0 +1,22 @@
+{
+  "title": "Trio of Heirloom Tomatoes",
+  "medium": "Oil on wood",
+  "dimensions": "8 x 8 in",
+  "year": 2026,
+  "image": "/artwork/heirloom_tomatoes.jpg",
+  "tags": ["oil", "still-life", "fruit"],
+  "featured": true,
+  "description": "Three heirloom tomatoes with red, yellow and green hues are displayed on a wooden plate. An original oil painting created from life.",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Original",
+      "price": 500
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/heirloom-tomatoes-tahsin-loqman.html",
+      "price_minimum": 17
+    }
+  ]
+}

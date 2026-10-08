@@ -7,12 +7,17 @@
   "image": "/artwork/yellow_tomato.jpg",
   "tags": ["oil", "still-life", "fruit", "vegetable", "food"],
   "featured": true,
-  "description": "A golden study in impasto, treating a single yellow heirloom tomato as a luminous landscape of warm yellow and cool green shadow.",
+  "description": "A golden study in impasto, treating a single yellow heirloom tomato as a luminous landscape of warm yellow and cool green shadow. An original oil painting created from life.",
   "for_sale": true,
   "sale_options": [
     {
       "medium": "Original",
-      "price": 400
+      "price": 180
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/yellow-tomato-tahsin-loqman.html?product=art-print",
+      "price_minimum": 17
     }
   ]
 }

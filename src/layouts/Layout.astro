@@ -49,7 +49,7 @@ const trioOfLimes = `${baseUrl}/artwork/trio_of_limes.jpg`
 
 // Prefix root-absolute asset paths with the base so OG images resolve under /dev/ too.
 const socialImageUrl = new URL(bannerImage, siteUrl).href;
-const faviconHref = `${baseUrl}/favicon.svg`;
+const faviconHref = `${baseUrl}/favicon.png`;
 const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 
 // Homepage (gallery) shows a tall hero banner with the nav overlaid; every
@@ -68,12 +68,7 @@ const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href={faviconHref} />
-
-    <!-- Lato for the landing hero title -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/png" href={faviconHref} />
 
     <!-- Build-time accent palette derived from the banner image -->
     <style set:html={`:root{--accent:${palette.accent};--accent-soft:${palette.accentSoft};--surface-tint:${palette.surfaceTint};--border-tint:${palette.borderTint};--accent-strong:${palette.accentStrong};}`}></style>
@@ -82,6 +77,10 @@ const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Gayathri:wght@100;400;700&family=Orbitron:wght@400..900&family=Quicksand:wght@300..700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Open Graph / WhatsApp / iMessage / Facebook -->
     <meta property="og:type" content="website" />
@@ -114,21 +113,23 @@ const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
           <Header overlay={true} />
         </div>
         <div class="hero-band">
-          <h1 class="hero-band-title">TAHSIN LOQMAN</h1>
+          <!--<h1 class="hero-band-title">TAHSIN LOQMAN</h1>-->
+          <img src={`${baseUrl}/signature_white.png`} class="hero-band-title-img" />
           <a href={`${baseUrl}/shop`} class="hero-band-cta">Shop the Collection</a>
         </div>
       </>
     ) : (
       <>
+        <div class="banner-hero-top-fade" aria-hidden="true"></div>
         <Header />
         {bannerEnabled && (
           bannerLink ? (
             <a href={bannerLink} class="site-banner" aria-label={bannerAlt || 'Banner'}>
-              <img src={trioOfLimes} alt={bannerAlt} width="1600" height="180" />
+              <img src={trioOfLimes} alt={bannerAlt} width="1600" height="280" />
             </a>
           ) : (
             <div class="site-banner">
-              <img src={trioOfLimes} alt={bannerAlt} width="1600" height="180" />
+              <img src={trioOfLimes} alt={bannerAlt} width="1600" height="280" />
             </div>
           )
         )}
@@ -158,7 +159,7 @@ const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
 
   html, body {
     height: 100%;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: "Quicksand", sans-serif;
     background-color: #fafafa;
     color: #222222;
     line-height: 1.6;
@@ -183,7 +184,7 @@ const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
   .site-banner {
     display: block;
     width: 100%;
-    min-height: 180px;
+    min-height: 280px;
     line-height: 0; /* prevent inline-baseline gap collapsing the anchor */
     overflow: hidden;
     background-color: #f2f2f2;
@@ -192,18 +193,18 @@ const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
 
   .site-banner img {
     width: 100%;
-    height: 180px; /* explicit height so the image drives the strip size */
+    height: 280px; /* explicit height so the image drives the strip size */
     object-fit: cover;
     display: block;
   }
 
   @media (max-width: 768px) {
     .site-banner {
-      min-height: 120px;
+      min-height: 220px;
     }
 
     .site-banner img {
-      height: 120px;
+      height: 220px;
     }
   }
 
@@ -232,10 +233,11 @@ const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
 
   /* White gradient descending from the top, giving the nav a legible backdrop. */
   .banner-hero-top-fade {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
+    z-index: 5;
     height: 180px;
     background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0) 100%);
     pointer-events: none;
@@ -264,7 +266,6 @@ const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
 
   .hero-band-title {
     margin: 0;
-    font-family: 'Lato', system-ui, sans-serif;
     color: #ffffff;
     font-size: clamp(2rem, 7vw, 4.5rem);
     font-weight: 700;
@@ -275,8 +276,15 @@ const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.35);
   }
 
+  .hero-band-title-img {
+    height: 180px;
+    transform: translateY(-10px);
+    filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+  }
+
   .hero-band-cta {
     display: inline-block;
+    transform: translateY(-60px);
     padding: 0.85rem 1.9rem;
     background: #ffffff;
     color: #111111;

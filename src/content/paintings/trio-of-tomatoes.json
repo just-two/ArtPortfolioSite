@@ -1,0 +1,18 @@
+{
+  "title": "Trio in Red",
+  "medium": "Oil on canvas panel",
+  "dimensions": "10 x 8 in",
+  "year": 2024,
+  "image": "/artwork/trio_of_tomatoes.jpg",
+  "tags": ["oil", "still-life", "food", "fruit"],
+  "featured": true,
+  "description": "An arrangement of three heirloom tomatoes in a row. An original oil painting created from life.",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/trio-in-red-tahsin-loqman.html",
+      "price_minimum": 17
+    }
+  ]
+}

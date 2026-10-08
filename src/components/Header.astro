@@ -13,7 +13,9 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <header class:list={["site-header", { overlay }]}>
   <div class="header-container">
-    <a href={`${baseUrl}/`} class="brand-title">Tahsin</a>
+    <a href={`${baseUrl}/`} class="brand-title">
+      <img src={`${baseUrl}/signature.png`} class="brand-logo">
+    </a>
     
     <!-- Hamburger Button (Visible on small screens) -->
     <button 
@@ -74,9 +76,54 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
   .site-header {
     width: 100%;
     padding: 1.5rem 1.5rem;
-    border-bottom: 1px solid #f0f0f0;
-    background-color: #ffffff;
-    position: relative;
+    position: fixed;
+    z-index: 6;
+  }
+
+  /* Overlay mode: header floats over the hero banner (homepage). */
+  .site-header.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    background-color: transparent;
+    border-bottom: none;
+    padding-top: 2.25rem; /* extra breathing room so the nav doesn't hug the top edge over the hero */
+  }
+
+  /* Landing page uses the big hero band title instead, so hide the top-left brand. */
+  .site-header.overlay .brand-title {
+    display: none;
+  }
+
+  /* Landing page: center the nav items (brand is hidden). */
+  .site-header.overlay .header-container {
+    justify-content: center;
+  }
+
+  .brand-logo {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: auto;
+    height: 100%;
+  }
+
+  /* Instagram icon link sits inline with the text nav items. */
+  .nav-instagram {
+    display: inline-flex;
+    align-items: center;
+    color: #666666;
+    transition: color 0.2s ease;
+  }
+
+  .nav-instagram:hover {
+    color: var(--accent, #111111);
+  }
+
+  .nav-instagram svg {
+    display: block;
   }
 
   /* Overlay mode: header floats over the hero banner (homepage). */
@@ -201,7 +248,9 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
     }
 
     .site-nav {
-      display: none; /* Hide default inline menu */
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;
       flex-direction: column;
       align-items: center;    /* <--- Centered horizontally */
       justify-content: center; /* center links vertically in the overlay */
@@ -218,7 +267,29 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     /* Expand dropdown menu when open */
     .site-nav.open {
-      display: flex;
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 250ms ease-in, visibility 0ms ease-in 0ms;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOutAndHide {
+      0% {
+        opacity: 1;
+        display: block;
+      }
+      100% {
+        opacity: 0;
+        display: none; /* Elements sets to none at the very end */
+      }
     }
 
     .site-nav a {

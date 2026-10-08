@@ -1,0 +1,18 @@
+{
+  "title": "Lychee",
+  "medium": "Soft pastel on pastel paper",
+  "dimensions": "9 x 12 in",
+  "year": 2024,
+  "image": "/artwork/lychee.jpg",
+  "tags": ["oil", "still-life", "fruit", "food"],
+  "featured": true,
+  "description": "A single lychee, partially peeled. An original soft pastel painting.",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/lychee-tahsin-loqman.html",
+      "price_minimum": 17
+    }
+  ]
+}

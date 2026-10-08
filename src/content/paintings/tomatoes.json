@@ -1,0 +1,22 @@
+{
+  "title": "Large Red with Three Tiny Green Tomatoes",
+  "medium": "Oil on canvas panel",
+  "dimensions": "7 x 5 in",
+  "year": 2026,
+  "image": "/artwork/tomatoes.jpg",
+  "tags": ["oil", "still-life", "fruit", "food"],
+  "featured": true,
+  "description": "A large red heirloom tomato is prominently placed on a blue cloth, accompanied by 3 teeny tiny green tomatoes. An original oil painting created from life.",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Original",
+      "price": 270
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/large-red-with-3-tiny-green-tahsin-loqman.html?product=art-print",
+      "price_minimum": 17
+    }
+  ]
+}

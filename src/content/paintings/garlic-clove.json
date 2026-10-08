@@ -6,12 +6,18 @@
   "image": "/artwork/garlic_clove.jpg",
   "tags": ["oil", "still-life", "vegetable", "food"],
   "featured": true,
-  "description": "A garlic clove",
+  "description": "A single garlic clove. An original oil paitning created from life.",
   "for_sale": true,
   "sale_options": [
     {
       "medium": "Original",
-      "price": 400
+      "price": 160
+    },
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/garlic-clove-tahsin-loqman.html",
+      "price_minimum": 17
     }
   ]
 }
+

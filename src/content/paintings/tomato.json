@@ -1,0 +1,18 @@
+{
+  "title": "Tomato",
+  "medium": "Oil on canvas panel",
+  "dimensions": "7 x 5 in",
+  "year": 2026,
+  "image": "/artwork/tomato.jpg",
+  "tags": ["oil", "still-life", "fruit", "food"],
+  "featured": true,
+  "description": "A red tomato resting on a blue tablecloth. An original oil painting created from life.",
+  "for_sale": true,
+  "sale_options": [
+    {
+      "medium": "Print",
+      "print_url": "https://fineartamerica.com/featured/a-red-tomato-on-blue-cloth-tahsin-loqman.html?product=art-print",
+      "price_minimum": 17
+    }
+  ]
+}

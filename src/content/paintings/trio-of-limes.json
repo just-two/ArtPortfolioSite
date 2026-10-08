@@ -5,19 +5,15 @@
   "dimensions": "10 x 8 in",
   "year": 2024,
   "image": "/artwork/trio_of_limes.jpg",
-  "tags": ["oil", "still-life", "food"],
+  "tags": ["oil", "still-life", "food", "fruit"],
   "featured": true,
-  "description": "A trio of limes",
+  "description": "An arrangement of three limes in a row. An original oil painting created from life.",
   "for_sale": true,
   "sale_options": [
     {
-      "medium": "Original",
-      "price": 800
-    },
-    {
       "medium": "Print",
       "print_url": "https://fineartamerica.com/featured/trio-in-green-tahsin-loqman.html",
-      "price_minimum": 20
+      "price_minimum": 17
     }
   ]
 }
