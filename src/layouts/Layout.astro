@@ -49,7 +49,7 @@ const trioOfLimes = `${baseUrl}/artwork/trio_of_limes.jpg`
 
 // Prefix root-absolute asset paths with the base so OG images resolve under /dev/ too.
 const socialImageUrl = new URL(bannerImage, siteUrl).href;
-const faviconHref = `${baseUrl}/favicon.svg`;
+const faviconHref = `${baseUrl}/favicon.png`;
 const inquiryEmail = SITE_CONFIG.inquiryEmail; // Global email reference
 
 // Homepage (gallery) shows a tall hero banner with the nav overlaid; every
@@ -68,7 +68,7 @@ const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href={faviconHref} />
+    <link rel="icon" type="image/png" href={faviconHref} />
 
     <!-- Build-time accent palette derived from the banner image -->
     <style set:html={`:root{--accent:${palette.accent};--accent-soft:${palette.accentSoft};--surface-tint:${palette.surfaceTint};--border-tint:${palette.borderTint};--accent-strong:${palette.accentStrong};}`}></style>
@@ -231,7 +231,7 @@ const palette = await getAccentPalette(bannerEnabled ? rawBannerImage : null);
 
   /* White gradient descending from the top, giving the nav a legible backdrop. */
   .banner-hero-top-fade {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
